@@ -1,0 +1,8 @@
+"0","```r
+
+final <- joined %>% 
+  mutate(Test_pop = as.integer(Test/(Pro_Population/100000))) %>% 
+  arrange(desc(as.integer(Test_pop))) %>% 
+  select(Province, Test_pop)
+final
+```"

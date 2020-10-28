@@ -1,0 +1,23 @@
+{
+    "id": "A62EB0FB",
+    "path": "~/r_projects/r_assignment/final/09_Prov_Infections_Per_100k_Population.Rmd",
+    "project_path": "09_Prov_Infections_Per_100k_Population.Rmd",
+    "type": "r_markdown",
+    "hash": "3439496321",
+    "contents": "",
+    "dirty": false,
+    "created": 1592331559761.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "chunk_output_type": "inline"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1592305388,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592305388,
+    "read_only": false,
+    "read_only_alternatives": []
+}

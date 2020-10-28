@@ -1,0 +1,2 @@
+"0","saveRDS(tests1, ""data/data_out/22_tests_per_1million_population.rds"")"
+"0","write.csv(tests1, ""data/data_out/22_tests_per_1million_population.csv"")"

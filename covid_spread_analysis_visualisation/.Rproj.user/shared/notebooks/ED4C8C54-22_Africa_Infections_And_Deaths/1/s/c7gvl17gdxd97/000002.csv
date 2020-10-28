@@ -1,0 +1,16 @@
+"0","```r
+covid <- data %>% 
+  select(day, month, year, continentExp, countriesAndTerritories, cases, deaths) %>% 
+  mutate(continent = continentExp,
+        date = make_datetime(year, month, day),
+        country = countriesAndTerritories) %>% 
+  select(country, cases, deaths) %>% 
+  group_by(country) %>% 
+  summarize(Cases = sum(cases),
+            Deaths = sum(deaths)) %>% 
+  filter(country == \"South_Africa\" | country == \"Egypt\" | country == \"Nigeria\" | country == \"Algeria\" | country == \"Ghana\" | country == \"Morocco\" | country == \"Cameroon\" | country == \"Sudan\" | country == \"Senegal\" | country == \"Djibouti\" | country == \"Guinea\" | country == \"Democratic_Republic_of_the_Congo\" | country == \"Cote_dIvoire\" | country == \"Gabon\" | country == \"Kenya\") %>% 
+  mutate(Country = factor(country, levels = c(\"South_Africa\",\"Egypt\", \"Nigeria\", \"Algeria\", \"Ghana\", \"Morocco\", \"Cameroon\", \"Sudan\", \"Senegal\", \"Djibouti\", \"Guinea\", \"Democratic_Republic_of_the_Congo\", \"Cote_dIvoire\", \"Gabon\", \"Kenya\"))) %>% 
+  arrange(Country) %>% 
+  select(Country, Cases, Deaths)
+covid
+```"

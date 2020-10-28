@@ -1,0 +1,107 @@
+---
+title: "Provincial Tests per 100,000 population"
+output: html_notebook
+---
+
+```{r Setup, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(readr)
+library(utils)
+library(rvest)
+library(ggplot2)
+```
+
+#Read raw data
+```{r}
+pro_pop <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/district_data/za_province_pop.csv", fileEncoding = "UTF-8-BOM", fill = TRUE, header = TRUE)
+pro_pop
+```
+
+#Write raw data
+```{r}
+write.csv(pro_pop, "data/data_raw/raw_17_provinvial_tests_per_100k_population.csv")
+```
+
+#Clean data
+```{r}
+new2 <- data.frame(
+  Province = c("GP", "KZN", "WC", "EC", "LP", "MP", "NW", "FS", "NC"),
+  Pro_Population = as.integer(c(15176115, 11289086, 6844272, 6712276, 5982584, 4592187, 4072160, 2887465,  1263875)))
+new2
+```
+
+#Join dataframes
+```{r}
+joined <- new %>% 
+  inner_join(new2, "Province")
+
+joined
+```
+
+#Calculate tests per 100k population
+```{r}
+final <- joined %>% 
+  mutate(Test_pop = as.integer(Test/(Pro_Population/100000))) %>% 
+  arrange(desc(as.integer(Test_pop))) %>% 
+  select(Province, Test_pop)
+final
+```
+
+#Rename data
+```{r}
+final1 <- final %>% # for labelling purposes
+  mutate(Test_pop1 = format(round(Test_pop, 0), nsmall = 0), # add comma for thousands
+         Test_pop1 = formatC(Test_pop, big.mark = ","),
+         Province = str_replace(Province, "WC", "Western Cape"),
+         Province = str_replace(Province, "EC", "Eastern Cape"),
+         Province = str_replace(Province, "GP", "Gauteng"),
+         Province = str_replace(Province, "KZN", "KwaZulu Natal"),
+         Province = str_replace(Province, "NW", "North West"),
+         Province = str_replace(Province, "FS", "Free State"),
+         Province = str_replace(Province, "NC", "Northern Cape"),
+         Province = str_replace(Province, "MP", "Mpumalanga"),
+         Province = str_replace(Province, "LP", "Limpopo"))
+final1
+```
+
+#Write to data_out folder
+```{r}
+saveRDS(final1, "data/data_out/17_provincial_tests_per_100k_population.rds")
+write.csv(final1, "data/data_out/17_provincial_tests_per_100k_population.csv")
+```
+
+#Plot for Provincial Tests per 100,000 population
+```{r}
+pt_100k_plot <- ggplot(data = final1,
+                  mapping = aes(x = reorder(Province, Test_pop), 
+                                y = Test_pop)) +
+  geom_bar(stat = "identity",
+           width = 0.75,
+           fill = "#b54c49",
+           color = "#b54c49") +
+  geom_text(aes(label = Test_pop1), 
+            position = position_dodge(width = 0.9), 
+            color = "white",
+            hjust = -0.15,
+            vjust = 0.25)+
+  labs(x= NULL,
+       y = NULL,
+       title = "Provincial Tests Per 100,000 Population",
+       subtitle = "This data is not regularly updated. This the most recent data available",
+       caption = "Updated: 16 June 2020") + 
+  theme_minimal() + 
+  theme(panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 8, color = "#969da1", hjust = 1.0, vjust = 0),
+        plot.title = element_text(face = "bold", size = rel(1.5), hjust = -0.38, colour = "white"),
+        plot.subtitle = element_text(size = 11, color = "#969da1", hjust = -0.25),
+        plot.caption = element_text(size = 11, hjust = -0.18, face = "bold", color = "white"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+pt_100k_plot + coord_flip()
+```

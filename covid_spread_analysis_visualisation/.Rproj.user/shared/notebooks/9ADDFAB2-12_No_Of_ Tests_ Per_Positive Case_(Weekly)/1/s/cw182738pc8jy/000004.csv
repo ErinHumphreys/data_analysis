@@ -1,0 +1,2 @@
+"0","saveRDS(new_media3, ""data/data_out/12_no_of_tests_per_positive_case_(weekly).rds"")"
+"0","write.csv(new_media3, ""data/data_out/12_no_of_tests_per_positive_case_(weekly).csv"")"

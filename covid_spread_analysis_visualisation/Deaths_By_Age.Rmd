@@ -1,0 +1,110 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library(rvest)
+library(selectr)
+library(tidyverse)
+library(magrittr)
+library(readr)
+library(utils)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+```
+
+```{r}
+nicd_page <-read_html("https://www.nicd.ac.za/latest-confirmed-cases-of-covid-19-in-south-africa-13-june-2020/")
+nicd_page
+```
+
+```{r}
+age_deaths_data <- html_node(nicd_page, xpath='//*[@id="main"]/div/div/div/section[2]/div/div/div[1]/div/div/div[3]/div/table[5]')
+age_deaths_data
+```
+
+```{r}
+age_deaths_table <- html_table(age_deaths_data, fill = TRUE, header = TRUE)
+age_deaths_table
+```
+
+```{r}
+write_csv(age_deaths_table, "gender_age.csv")
+```
+
+```{r}
+age_deaths <- read.csv("gender_age.csv", stringsAsFactors = F)
+age_deaths
+```
+
+
+```{r}
+new_age <- age_deaths %>%
+  select(Age, Deaths)
+new_age
+
+new_age <- new_age[-c(12),] #delete row 12
+new_age
+```
+
+```{r}
+
+new_wide <- new_age %>% 
+  pivot_wider(names_from = Age, values_from = Deaths) 
+new_wide
+  
+```
+
+
+```{r}
+new <- new_wide %>% 
+  mutate(`80+` = `80-89` + `90-99`) %>% 
+  pivot_longer(c("0-9","10-19","20-29","30-39","40-49","50-59","60-69","70-79","80-89","Unknown"), names_to = "Age", values_to = "Deaths") %>% 
+  select(Age, Deaths)
+new
+```
+
+###Death by Age Plot
+```{r}
+death_age_plot <- ggplot(data = new,
+                         mapping = aes(x = Age,
+                                       y = Deaths)) +
+  geom_bar(stat = "identity",
+           width = 0.5,
+           fill = "#b54c49",
+           color = "#b54c49") +
+  geom_text(aes(label = Deaths), 
+            position = position_dodge(width = 0.5), 
+            vjust = -0.50,
+            color = "white") +
+  labs(x = NULL,
+       y = NULL,
+       title = "Deaths by Age", 
+       color = "white",
+       caption = "Updated: 16 June 2020") + 
+  theme_minimal() + 
+  theme(panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_text(size = 11, color = "#969da1"),
+        axis.text.y = element_blank(),
+        plot.title = element_text(face = "bold", size = rel(1.5), hjust = 0.0, colour = "white"), 
+        plot.caption = element_text(size = 11, hjust = 0, face = "bold", color = "white"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+death_age_plot
+
+#have to add in last updated 
+```
+
+
+
+
+
+
+

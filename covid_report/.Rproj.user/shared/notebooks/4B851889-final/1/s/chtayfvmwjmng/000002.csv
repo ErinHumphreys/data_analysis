@@ -1,0 +1,10 @@
+"0","ggplot(covid_nrc, aes(x=reorder(sentiment, -n), y=n, fill=sentiment))+"
+"0","  geom_bar(stat=""identity"")+"
+"0","  theme_minimal()+"
+"0","  theme(axis.text.x = element_text(angle = 90, hjust = 1))+"
+"0","  ylab(""Number of Times sentiment appears in Covid-19 related tweets"")+"
+"0","  xlab("""")+"
+"0","  guides(fill=FALSE)"
+"2","Error in ggplot(covid_nrc, aes(x = reorder(sentiment, -n), y = n, fill = sentiment)) : 
+  object 'covid_nrc' not found
+"

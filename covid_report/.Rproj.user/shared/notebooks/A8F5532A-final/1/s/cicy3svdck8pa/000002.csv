@@ -1,0 +1,5 @@
+"0","# Tidy-Text"
+"0","tidy_covid_tweets <- covid_tweets %>%"
+"0","    select(created_at,text) %>%"
+"0","    unnest_tokens(""word"", text)"
+"0","head(tidy_covid_tweets)"

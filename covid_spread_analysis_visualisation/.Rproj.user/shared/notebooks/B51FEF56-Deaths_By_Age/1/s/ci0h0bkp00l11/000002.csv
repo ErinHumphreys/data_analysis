@@ -1,0 +1,9 @@
+"0","```r
+nicd_page <-read_html(\"https://www.nicd.ac.za/latest-confirmed-cases-of-covid-19-in-south-africa-13-june-2020/\")
+nicd_page
+```"
+"1","{html_document}
+<html class=\"html\" lang=\"en-US\" prefix=\"og: http://ogp.me/ns#\" itemscope=\"\" itemtype=\"http://schema.org/WebPage\">
+[1] <head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n<script>(function(w,d,s ...
+[2] <body class=\"post-template-default single single-post postid-18721 single-format-standard wp-custom- ...
+"

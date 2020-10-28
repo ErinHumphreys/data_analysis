@@ -1,0 +1,118 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+install.packages("rvest")
+install.packages("selectr")
+```
+
+```{r}
+library(rvest)
+library(selectr)
+library(tidyverse)
+library(magrittr)
+library(ggplot2)
+library(gridExtra)
+library(grid)
+```
+
+```{r}
+nicd_page <-read_html("https://www.nicd.ac.za/latest-confirmed-cases-of-covid-19-in-south-africa-12-june-2020/")
+nicd_page
+```
+
+```{r}
+gender_deaths_data <- html_node(nicd_page, xpath = '//*[@id="main"]/div/div/div/section[2]/div/div/div[1]/div/div/div[3]/div/table[4]')
+head(gender_deaths_data)
+```
+
+```{r}
+gender_deaths_table <- html_table(gender_deaths_data, fill = TRUE, header = TRUE)
+gender_deaths_table
+```
+```{r}
+write_csv(gender_deaths_table, "gender_deaths.csv")
+```
+
+```{r}
+gender_deaths <- read.csv("gender_deaths.csv", stringsAsFactors = F)
+gender_deaths
+```
+
+
+```{r}
+gender_deaths <- gender_deaths %>%
+  mutate(Male = Male....,
+         Female = Female....,
+         total = Total..Unknown..2.) %>% 
+  select(Male, Female, total)
+gender_deaths
+```
+
+```{r}
+gender_deaths
+```
+
+```{r}
+gender_deaths_plot <- gender_deaths %>% 
+  separate(Male, into = c ("male", "perc1"), sep = " ") %>% 
+  separate(Female, into = c("female", "perc2"), sep = " ") %>%
+  select(male, female, total) %>% 
+  mutate(male = as.integer(male),
+         female = as.integer(female))
+gender_deaths_plot
+```
+
+```{r}
+gender_deaths_plot <- gender_deaths_plot %>% 
+  mutate(unk = total - (male + female)) %>% 
+  select(male, female, unk)
+gender_deaths_plot
+```
+
+```{r}
+gender_deaths_plot <- gender_deaths_plot %>% # taking table4a dataset AND THEN piping it to "pivot_longer"
+  pivot_longer(c('male', 'female', 'unk'), names_to = "gender", values_to = "deaths")
+gender_deaths_plot
+```
+
+```{r}
+plot <- ggplot(data = gender_deaths_plot,
+               mapping = aes(x = reorder(gender, -deaths),
+                             y = deaths)) +
+  geom_bar(stat = 'identity', 
+           fill = "#b54c49",
+           width = 0.5) +
+  geom_text(aes(label = deaths),
+            colour = "white", 
+            position = position_dodge(width = 0.9),
+            vjust = -1.0) + 
+  labs(x = NULL,
+       y = NULL,
+       title = "Deaths by Gender") +
+  theme_minimal() + 
+  theme(panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_text(size = 11, color = "#969da1"),
+        axis.text.y = element_blank(),
+        plot.title = element_text(face = "bold", size = rel(1.5), hjust = 0.0, colour = "white"), 
+        plot.caption = element_text(size = 11, hjust = 0, color = "white"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+plot
+```
+
+
+
+
+
+
+
+
+

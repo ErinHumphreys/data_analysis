@@ -1,0 +1,7 @@
+"0","```r
+# Tokenising tweets_covid
+tidy_covid<- tweets_covid %>%
+  select(created_at, screen_name,text,favorite_count,retweet_count) %>%
+  unnest_tokens(\"word\", text)
+head(tidy_covid)
+```"

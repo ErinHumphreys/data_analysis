@@ -1,0 +1,135 @@
+---
+title: "Prov infections per 100000 population"
+output: html_notebook
+---
+
+```{r Setup, message = FALSE, warning = FALSE}
+library(rvest)
+library(selectr)
+library(tidyverse)
+library(magrittr)
+library(readr)
+library(utils)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+```
+
+#Read raw data
+```{r}
+data <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_confirmed.csv", na.strings = "", fileEncoding = "UTF-8-BOM", stringsAsFactors = TRUE)
+data
+```
+
+#Write raw data
+```{r}
+write.csv(data, "data/data_raw/raw_09_prov_infections_per_100k_population/raw_covid19za_data.csv")
+```
+
+#Pivot longer, convert dates to date format, calculate infections per day
+```{r}
+covid <- data %>% 
+  pivot_longer(c('EC', 'FS','GP', 'KZN', 'LP', 'MP', 'NC', 'NW', 'WC'), names_to = "province", values_to = "confirmed_cases") %>% 
+  mutate(date = dmy(date),
+         infec_per_day = total - lag(total)) %>% 
+  select(date, province, confirmed_cases) %>% 
+  filter(date == max(date))
+covid
+```
+
+#Read raw data
+```{r}
+pop <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/district_data/za_province_pop.csv",na.strings = "", fileEncoding = "UTF-8-BOM")
+pop
+```
+#Write raw data
+```{r}
+write.csv(pop, "data/data_raw/raw_09_prov_infections_per_100k_population/prov_population_data.csv")
+```
+
+#Clean data
+```{r}
+new2 <- data.frame(
+  province = c("GP", "KZN", "WC", "EC", "LP", "MP", "NW", "FS", "NC"),
+  population = as.integer(c(15176115, 11289086, 6844272, 6712276, 5982584, 4592187, 4072160, 2887465, 1263875)))
+new2
+```
+
+#JOin data
+```{r}
+covid_join <- covid %>% 
+  left_join(new2, by = "province")
+covid_join 
+  
+```
+
+#Calculate infections per 100k
+```{r}
+new3 <- covid_join %>% 
+  mutate(infections_100 = round((confirmed_cases / population) * 100000, digits = 2)) %>% 
+  select(date, province, confirmed_cases, population, infections_100) %>% 
+  arrange(desc(infections_100)) 
+new3 
+```
+
+#Set provinces in specifc order
+```{r}
+covid <- new3 %>% 
+  mutate(province = factor(province, levels = c("LP", "MP", "NC", "FS", "NW", "KZN", "GP", "EC", "WC")))
+covid
+```
+
+#Rename data
+```{r}
+covid <- covid %>% 
+  mutate(province = as.character(province),
+         province = str_replace(province, "WC", "Western Cape"),
+         province = str_replace(province, "EC", "Eastern Cape"),
+         province = str_replace(province, "GP", "Gauteng"),
+         province = str_replace(province, "KZN", "KwaZulu Natal"),
+         province = str_replace(province, "NW", "North West"),
+         province = str_replace(province, "FS", "Free State"),
+         province = str_replace(province, "NC", "Northern Cape"),
+         province = str_replace(province, "MP", "Mpumalanga"),
+         province = str_replace(province, "LP", "Limpopo"))
+covid
+```
+
+#Write to data_out folder
+```{r}
+saveRDS(active_cases_data, "data/data_out/09_prov_infections_per_100k_population.rds")
+write.csv(active_cases_data, "data/data_out/09_prov_infections_per_100k_population.csv")
+```
+
+```{r}
+plot <- ggplot(data = covid,
+               mapping = aes(x = reorder(province, infections_100),
+                             y = infections_100)) +
+  geom_bar(stat = "identity",
+           width = 0.9,
+           fill = "#b54c49",
+           color = "#b54c49") +
+  geom_text(aes(label = infections_100), 
+            position = position_dodge(width = 0.9), 
+            hjust = -0.15,
+            vjust = 0.50,
+            color = "white") +
+  labs(x = NULL, 
+       y = NULL, 
+       title = "Prov Infections per 100,000 Population",
+       caption = "Updated: 16 June 2020") +
+  theme_minimal() + 
+  theme(panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 11, color = "#969da1", hjust = 1.0),
+        plot.title = element_text(face = "bold", size = rel(1.5), hjust = -0.60, colour = "white"), 
+        plot.caption = element_text(size = 11, hjust = -0.25, face = "bold", color = "white"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+plot + coord_flip()
+```

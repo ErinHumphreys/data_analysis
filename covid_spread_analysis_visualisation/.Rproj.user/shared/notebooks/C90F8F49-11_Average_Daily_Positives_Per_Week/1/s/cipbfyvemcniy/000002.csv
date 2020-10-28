@@ -1,0 +1,3 @@
+"0","daily_pos <- daily_pos %>% # for labelling purposes"
+"0","  mutate(weekly_case_av1 = formatC(weekly_case_av, big.mark = "","")) # for labels"
+"0","daily_pos"

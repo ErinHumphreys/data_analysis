@@ -1,0 +1,79 @@
+---
+title: "Average daily positives"
+output: html_notebook
+---
+
+```{r Setup, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(readr)
+library(utils)
+library(rvest)
+library(ggplot2)
+library(lubridate)
+```
+
+#Read raw data 
+```{r echo=TRUE}
+media <- read.csv("data/data_raw/raw_11_average_daily_positives_per_week/case_media.csv", na.strings = "", fill = TRUE, header = TRUE, stringsAsFactors = TRUE)
+media
+```
+
+#Clean data and sort them into weeks
+```{r echo=TRUE}
+daily_pos <- media %>% 
+  mutate(weeks = week_label,
+         weekly_case_av = round(weekly_cases/7)) %>% 
+  select(weeks,weekly_case_av) %>% 
+  filter(!is.na(weekly_case_av))
+daily_pos
+```
+
+#Get comma for thousands
+```{r}
+daily_pos <- daily_pos %>% # for labelling purposes
+  mutate(weekly_case_av1 = formatC(weekly_case_av, big.mark = ",")) # for labels
+daily_pos
+```
+
+#Write to data_out folder
+```{r}
+saveRDS(active_cases_data, "data/data_out/11_average_daily_positives_per_week.rds")
+write.csv(active_cases_data, "data/data_out/11_average_daily_postives_per_week.csv")
+```
+
+#Plot
+```{r}
+week_p <- ggplot(data = daily_pos, 
+                    mapping = aes(x = reorder(weeks,-weekly_case_av),
+                                  y = weekly_case_av))+
+  geom_bar(stat= "identity",
+           width=0.9,
+           fill = "#b54c49",
+           color = "#b54c49") +
+  geom_text(aes(label = weekly_case_av1), 
+            position=position_dodge(width=0.9), 
+            size = 3.5, 
+            vjust = 0.35,
+            hjust = -0.20,
+            color = "white")+
+  labs(x= "WEEK",
+       y = NULL,
+       title="Average daily test per week",
+       caption = "Updated: 16 June 2020") + 
+  theme_minimal() + 
+  theme(panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 8, color = "#969da1", hjust = 1.0, vjust = 0),
+        plot.title = element_text(face = "bold", size = rel(1.5), hjust = -0.25, colour = "white"),
+        axis.title.y = element_text(face = "bold", size = 9, color = "white"),
+        plot.subtitle = element_text(size = 11, color = "#969da1", hjust = -0.50),
+        plot.caption = element_text(size = 11, hjust = -0.18, face = "bold", color = "white"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+week_p + coord_flip()
+```

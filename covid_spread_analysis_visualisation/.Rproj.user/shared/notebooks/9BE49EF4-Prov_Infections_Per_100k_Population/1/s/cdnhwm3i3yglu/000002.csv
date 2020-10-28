@@ -1,0 +1,5 @@
+"0","```r
+covid <- new3 %>% 
+  mutate(province = factor(province, levels = c(\"LP\",\"MP\",\"NC\",\"FS\",\"NW\",\"KZN\",\"GP\",\"EC\",\"WC\")))
+covid
+```"

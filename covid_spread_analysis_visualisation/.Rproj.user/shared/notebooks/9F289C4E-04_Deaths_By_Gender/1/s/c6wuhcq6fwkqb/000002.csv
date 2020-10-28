@@ -1,0 +1,14 @@
+"0","gender_deaths_data <- html_node(nicd_page, xpath = '//*[@id=""main""]/div/div/div/section[2]/div/div/div[1]/div/div/div[3]/div/table[4]')"
+"0","head(gender_deaths_data)"
+"1","$node
+"
+"1","<pointer: 0x00000081c0a83760>
+"
+"1","
+"
+"1","$doc
+"
+"1","<pointer: 0x00000081c0748bb0>
+"
+"1","
+"

@@ -1,0 +1,4 @@
+"0","final1 <- final %>% # for labelling purposes"
+"0","  mutate(Deaths_pop = format(round(Deaths_pop, 2), nsmall = 2),"
+"0","         Deaths_pop = as.numeric(Deaths_pop))"
+"0","final1"

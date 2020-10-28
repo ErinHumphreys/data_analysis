@@ -1,0 +1,5 @@
+"0","```r
+tidy_covid_tweets %>%
+  count(word) %>%
+    arrange(desc(n))
+```"

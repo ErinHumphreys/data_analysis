@@ -1,0 +1,7 @@
+"0","gender_deaths_plot <- gender_deaths %>% "
+"0","  separate(Male, into = c (""male"", ""perc1""), sep = "" "") %>% "
+"0","  separate(Female, into = c(""female"", ""perc2""), sep = "" "") %>%"
+"0","  select(male, female, total) %>% "
+"0","  mutate(male = as.integer(male),"
+"0","         female = as.integer(female))"
+"0","gender_deaths_plot"

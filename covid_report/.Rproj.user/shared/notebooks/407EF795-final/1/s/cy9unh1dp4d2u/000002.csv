@@ -1,0 +1,4 @@
+"0","```r
+# Stopwords: Removing stop words such as  â€œtheâ€, â€œandâ€, â€œbotâ€, â€œforâ€, â€œisâ€, etc. 
+covid_corpus <- tm_map(covid_corpus, removeWords, stopwords(\"english\"))
+```"

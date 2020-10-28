@@ -1,0 +1,63 @@
+---
+title: "No of tests per positive case (weekly)"
+output: html_notebook
+---
+
+```{r Setup, include=FALSE}
+library(tidyverse)
+library(readr)
+library(utils)
+library(rvest)
+library(ggplot2)
+library(lubridate)
+
+```
+
+```{r echo=TRUE}
+media <- read.csv("case_media.csv", na.strings = "", fill = TRUE, header = TRUE, stringsAsFactors = TRUE)
+media
+```
+
+```{r echo=TRUE}
+new_media3 <- media %>% 
+  mutate(weeks = week_label) %>% 
+  select(weeks,weekly_cases,tests_per_case) %>% 
+  filter(!is.na(tests_per_case)) 
+new_media3
+```
+
+```{r echo=TRUE}
+week_pos <- ggplot(data = new_media3, 
+                    mapping = aes(x = reorder(weeks, -weekly_cases),
+                                  y = tests_per_case))+
+  geom_bar(stat= "identity",
+           width=0.9,
+           fill = "#b54c49",
+           color = "#b54c49") +
+  geom_text(aes(label = tests_per_case), 
+            position = position_dodge(width = 0.9), 
+            vjust = 0.30,
+            hjust = -0.30,
+            color = "white")+
+  labs(x= NULL,
+       y = NULL,
+       title = "No of tests per positive case (weekly)",
+       caption = "Updated: 15 June 2020") + 
+  theme_minimal() + 
+  theme(panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 8, color = "#969da1", hjust = 1.0, vjust = 0),
+        plot.title = element_text(face = "bold", size = rel(1.5), hjust = -0.25, colour = "white"),
+        axis.title.y = element_text(face = "bold", size = 9, color = "white"),
+        plot.subtitle = element_text(size = 11, color = "#969da1", hjust = -0.50),
+        plot.caption = element_text(size = 11, hjust = -0.18, face = "bold", color = "white"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+        
+week_pos + coord_flip()
+```

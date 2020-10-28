@@ -1,0 +1,3 @@
+"0","docs <- out$documents"
+"0","vocab <- out$vocab"
+"0","meta <-out$meta"

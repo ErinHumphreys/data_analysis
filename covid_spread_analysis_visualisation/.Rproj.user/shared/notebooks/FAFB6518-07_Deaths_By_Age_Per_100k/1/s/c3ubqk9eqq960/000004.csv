@@ -1,0 +1,2 @@
+"0","data <- read.csv(""https://raw.githubusercontent.com/dsfsi/covid19za/master/data/official_stats/statssa_population_midyear_2019.csv"", na.strings = """", fileEncoding = ""UTF-8-BOM"", stringsAsFactors = TRUE)"
+"0","data"

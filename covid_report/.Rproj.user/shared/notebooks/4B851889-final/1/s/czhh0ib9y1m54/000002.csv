@@ -1,0 +1,9 @@
+"0","```r
+# Negative and positive on one plot
+overall_covid <-
+  tidy_covid %>%
+  inner_join(get_sentiments(\"bing\")) %>% 
+  count(date, sentiment) %>% 
+  spread(sentiment,n, fill = 0) 
+head(overall_covid)
+```"

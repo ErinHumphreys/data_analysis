@@ -1,0 +1,36 @@
+"0","```r
+plot <- ggplot() + 
+  geom_line(data = covid3, 
+            aes(x = date, 
+                y = deaths), 
+            color = \"#b54c49\") +
+  geom_line(data = covid3, 
+            aes(x = date, 
+                y = case_fatality_rate), 
+            color = \"#969da1\",
+            linetype = \"dashed\") +
+  scale_y_continuous(name = NULL,
+                     breaks = seq(0, 2000, by = 200), 
+                     sec.axis = sec_axis(trans = ~./200,
+                                         name = NULL,
+                                         breaks = seq(0, 10, by = 1))) +
+  labs(x = NULL,
+       y = NULL, 
+       title = \"Total Deaths\",
+       caption = \"Updated: 16 June 2020\") +
+  theme_minimal() + 
+  theme(legend.position = \"bottom\",
+        panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_text(size = 11, color = \"#969da1\"),
+        axis.text.y = element_text(size = 11, color = \"#969da1\"),
+        plot.title = element_text(face = \"bold\", size = rel(1.5), hjust = 0.0, colour = \"white\"), 
+        plot.caption = element_text(size = 11, hjust = 0, face = \"bold\", color = \"white\"),
+        plot.background = element_rect(size = 1.5, fill = \"#142c44\", colour = \"#969da1\"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, \"cm\"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+plot
+```"

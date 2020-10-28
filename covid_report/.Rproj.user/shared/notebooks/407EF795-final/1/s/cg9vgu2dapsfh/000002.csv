@@ -1,0 +1,7 @@
+"0","```r
+findingk2 <- searchK(out2$documents, 
+                    out2$vocab, 
+                    K = c(10:30),
+                    data = meta, 
+                    verbose=FALSE)
+```"

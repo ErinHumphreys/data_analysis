@@ -1,0 +1,874 @@
+---
+title: "An Analysis of COVID-19 Media Reports"
+output: html_notebook
+---
+
+# Introduction
+The outbreak of coronavirus disease 2019 (COVID-19) has created a global health crisis that has had a deep impact on the way we perceive our world and our everyday lives. Not only the rate of contagion and patterns of transmission threatens our sense of agency, but the safety measures put in place to contain the spread of the virus also require social distancing by refraining from doing what is inherently human, which is to find solace in the company of others. 
+
+The social media platform, Twitter, was used to analyze tweets from 6 various South African news accounts. These results of these analyses will be modeled into plots/ graphs to show various sentiments and topics. 
+
+### Setup
+#### Packages
+The relevant packages were installed. 
+```{r message=FALSE, warning=FALSE}
+install.packages("rtweet")
+```
+
+```{r message=FALSE, warning=FALSE}
+install.packages("maps")
+```
+
+```{r message=FALSE, warning=FALSE}
+install.packages("tidytext")
+```
+
+```{r message=FALSE, warning=FALSE}
+install.packages("textdata")
+```
+
+```{r message=FALSE, warning=FALSE}
+install.packages("tm")
+```
+
+```{r message=FALSE, warning=FALSE}
+install.packages("stm")
+```
+
+
+#### Libraries
+The relevant libraries were loaded
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+library(rtweet)
+library(maps)
+library(tidytext)
+library(tidyverse)
+library(textdata)
+library(dplyr)
+library(tm)
+library(SnowballC)
+library(topicmodels)
+library(stm)
+library(tidyr)
+library(stringr)
+library(ggplot2)
+```
+
+
+## Collect the data
+Search relevant coronavirus tweets by location for South Africa. 
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+covid_geo_tweets <- search_tweets("coronavirus",
+                                  "lang:en", 
+                                  geocode = "-30.55948,22.9375,1000mi", 
+                                  n = 3000, 
+                                  type ="recent", 
+                                  include_rts = FALSE)
+geocoded <- lat_lng(covid_geo_tweets)
+```
+
+### Map
+This is a plot of the map to show where where the most coronavirus tweets originate from. As seen in map, most of the tweets originate from the Western Cape, Gauteng, and the Eastern Cape provinces. Coincedently, according to [mediahack.co.za](https://mediahack.co.za/datastories/coronavirus/dashboard/), these are the areas with the highest recorded number of cases. 
+```{r message=FALSE, warning=FALSE}
+par(mar = c(0, 0, 0, 0))
+maps::map("world", lwd = .25)
+with(geocoded, points(lng, lat, pch = 20, cex = .50, col = rgb(0, .3, .7, .75)))
+```
+
+
+### Frequency of Tweets 
+
+#### Frequency of General Tweets:
+The following code and plot is to illustrate the frequency of general posts from News24, eNCA, SABC News, IOL News, Times Live and Eye Witness News (EWN). 
+```{r message=FALSE, warning=FALSE}
+news_media <- get_timelines(c("News24", "eNCA", "SABCNews", "IOL", "TimesLIVE", "ewnupdates"),
+                            n = 3200, 
+                            include_rts = FALSE)
+head(news_media)
+```
+
+```{r}
+# Save tweets in CSV file.
+save_as_csv(news_media, "data/data_raw/media_timelines.csv")
+```
+
+```{r}
+# Open data of media timelines
+news_media <- read.csv("data/data_raw/media_timelines.csv", stringsAsFactors = FALSE)
+```
+
+
+##### Frequency Plot
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+## plot the frequency of tweets for each user over time
+news_media %>% 
+  dplyr::filter(created_at > "2020-04-30") %>%
+  dplyr::group_by(screen_name) %>%
+  ts_plot("days", trim = 1L) +
+  ggplot2::geom_point() +
+  ggplot2::theme_minimal() +
+  ggplot2::theme(
+    legend.title = ggplot2::element_blank(),
+    legend.position = "bottom",
+    plot.title = ggplot2::element_text(face = "bold")) +
+  ggplot2::labs(
+    x = NULL, y = NULL,
+    title = "Frequency of tweets posted by news organization",
+    subtitle = "Twitter status (tweet) counts aggregated by day from May 2020",
+    caption = "\nSource: Data collected from Twitter's REST API via rtweet"
+  )
+```
+
+
+#### Frequency of Coronavirus Tweets:
+The following code and plot is to illustrate the frequency of coronavirus-related tweets posted by News24, eNCA, SABC News, IOL News, Times Live and Eye Witness News (EWN). 
+```{r message=FALSE, warning=FALSE}
+covid_dictionary <- c("covid-19","coronavirus", "COVID-19", "Coronavirus", "Covid-19", "COVID19", "covid19")
+```
+
+```{r message=FALSE, warning=FALSE}
+covid_tweets <- news_media %>%
+    filter(str_detect(text, covid_dictionary))
+head(covid_tweets)
+
+# save COVID-19 tweets in CSV file. 
+save_as_csv(covid_tweets, "data/data_raw/covid_tweets.csv")
+```
+
+##### Plot: Frequency of COVID-19 related tweets posted by news organization
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+## plot the frequency of tweets for each user over time
+covid_tweets %>% 
+  dplyr::filter(created_at > "2020-04-30") %>%
+  dplyr::group_by(screen_name) %>%
+  ts_plot("days", trim = 1L) +
+  ggplot2::geom_point() +
+  ggplot2::theme_minimal() +
+  ggplot2::theme(
+    legend.title = ggplot2::element_blank(),
+    legend.position = "bottom",
+    plot.title = ggplot2::element_text(face = "bold")) +
+  ggplot2::labs(
+    x = NULL, y = NULL,
+    title = "Frequency of COVID-19 related tweets posted by news organization",
+    subtitle = "Twitter status (tweet) counts aggregated by day from May 2020",
+    caption = "\nSource: Data collected from Twitter's REST API via rtweet"
+  )
+```
+
+Based on the above produced frequency plots of the 6 news accounts, it is interesting to see that although News24 posted the post tweets in the month of June, EWN and Times Live has been the most consistent while maintaining a constant frequency rate. SABC News has the lowest frequency rate of general tweets per day. 
+
+In contrast to the frequency of general tweets per day, Times Live has the least tweets that are related to COVID-19, whereas News 24 has the highest frequency of COVID-19 related tweets since June. However, EWN remains consistent by constantly posting COVID-19 related tweets, since May and most probably before May too. 
+
+## Text Analysis 
+
+```{r message=FALSE, warning=FALSE}
+# Creating a Corpus
+covid_corpus <- Corpus(VectorSource(as.vector(covid_tweets$text))) 
+covid_corpus
+```
+As this output shows, we’ve created a corpus with 388 documents, where each document is one of media's tweets.
+
+
+```{r message=FALSE, warning=FALSE}
+# Tidy-Text
+tidy_covid_tweets <- covid_tweets %>%
+    select(created_at,text) %>%
+    unnest_tokens("word", text)
+head(tidy_covid_tweets)
+```
+
+```{r message=FALSE, warning=FALSE}
+tidy_covid_tweets %>%
+  count(word) %>%
+    arrange(desc(n))
+head(tidy_covid_tweets)
+```
+
+
+### Text Pre-Processing
+```{r message=FALSE, warning=FALSE}
+# Stopwords: Removing stop words such as  “the”, “and”, “bot”, “for”, “is”, etc. 
+covid_corpus <- tm_map(covid_corpus, removeWords, stopwords("english"))
+```
+
+```{r message=FALSE, warning=FALSE}
+# Remove stopwords as follows:
+data("stop_words")
+    tidy_covid_tweets <- tidy_covid_tweets %>%
+      anti_join(stop_words) %>% 
+      filter(!(word == "https" |
+               word == "rt" |
+               word == "t.co" |
+               word == "amp"))
+```
+
+```{r message=FALSE, warning=FALSE}
+# And now we can repeat the count of top words above:
+tidy_covid_tweets %>%
+  count(word) %>%
+    arrange(desc(n))
+head(tidy_covid_tweets)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+# Punctuation: Remove all punctuation marks. This is generally considered important, since to an algorithm the punctuation mark “,” will assume a unique numeric identity. 
+covid_corpus <- tm_map(covid_corpus, content_transformer(removePunctuation))
+``` 
+
+```{r message=FALSE, warning=FALSE}
+# Removing Numbers: In many texts, numbers can carry significant meaning.On the other hand, many numbers add little to the meaning of a text.
+covid_corpus <- tm_map(covid_corpus, content_transformer(removeNumbers))
+```
+
+```{r message=FALSE, warning=FALSE}
+# This tells R to remove all numeric digits and the ‘-’ sign means grep excludes them rather than includes them.
+tidy_covid_tweets <- tidy_covid_tweets[-grep("\\b\\d+\\b", tidy_covid_tweets$word),]
+```
+
+```{r message=FALSE, warning=FALSE}
+# Word Case: Force all text into lower case.
+covid_corpus <- tm_map(covid_corpus,  content_transformer(tolower)) 
+```
+
+```{r message=FALSE, warning=FALSE}
+# Removing Whitespaces:
+covid_corpus <- tm_map(covid_corpus, content_transformer(stripWhitespace))
+```
+
+```{r message=FALSE, warning=FALSE}
+# Use the gsub function again as follows (s+ describes a blank space)
+tidy_covid_tweets$word <- gsub("\\s+","",tidy_covid_tweets$word)
+```
+
+```{r message=FALSE, warning=FALSE}
+# Stemming: Replace words with its most basic conjugate form.
+covid_corpus  <- tm_map(covid_corpus, content_transformer(stemDocument), language = "english")
+```
+
+```{r message=FALSE, warning=FALSE}
+# Stem the tidytext object with the wordStem function [library(SnowballC)]. 
+tidy_covid_tweets <- tidy_covid_tweets %>%
+  mutate_at("word", funs(wordStem((.), language="en")))
+```
+
+
+## The Document-Term Matrix
+Each word is a row and each column is a document. The number within each cell describes the number of times the word appears in the document.
+
+```{r message=FALSE, warning=FALSE}
+# Create a document-term matrix from a Corpus object. The end of the code above specifies that we only want to include words that are at least two characters long. 
+covid_DTM <- DocumentTermMatrix(covid_corpus, control = list(wordLengths = c(2, Inf)))
+```
+
+```{r message=FALSE, warning=FALSE}
+# View the first five rows of the DTM and two of its columns. 
+inspect(covid_DTM[1:5,3:8])
+```
+
+```{r message=FALSE, warning=FALSE}
+# Create a DTM in tidytext.
+tidy_covid_DTM <-
+  tidy_covid_tweets %>%
+  count(created_at, word) %>%
+  cast_dtm(created_at, word, n)
+```
+
+
+## Sentiment in general
+
+### General Media Sentiment
+
+#### Pre-Process Media Timelines
+```{r message=FALSE, warning=FALSE}
+# Import media timelines
+media_timelines <- read.csv("data/data_raw/media_timelines.csv", stringsAsFactors = FALSE)
+head(media_timelines)
+```
+
+##### Tidying of data
+```{r message=FALSE, warning=FALSE}
+# Tokenising approx. 15 000 tweets from media agencies
+tidy_media_timelines <- media_timelines %>%
+  select(created_at, screen_name,text,favorite_count,retweet_count) %>%
+  unnest_tokens("word", text)
+head(tidy_media_timelines)
+```
+
+```{r message=FALSE, warning=FALSE}
+# Removing stop words and extra meaningless words
+data("stop_words")
+tidy_less <- tidy_media_timelines %>%
+  anti_join(stop_words) %>% 
+  filter(!(word == "https"|
+           word == "rt" |
+           word == "t.co" |
+           word == "amp"))
+head(tidy_less)
+```
+
+```{r message=FALSE, warning=FALSE}
+# Separate date and time
+tidy_less <- tidy_less %>% 
+  separate(created_at, into = c("date", "time"), sep = "\\s", extra = "merge") %>% 
+  mutate(date = as.Date(date,"%Y-%m-%d"))
+head(tidy_less)
+```
+
+```{r message=FALSE, warning=FALSE}
+# Save output as a CSV. 
+write.csv("data_out/media_tweets_tidy")
+```
+
+##### Analysis of Results:
+The nrc lexicon categorizes words in a binary fashion (“yes”/“no”) into categories of positive, negative, anger, anticipation, disgust, fear, joy, sadness, surprise, and trust. 
+
+The bing lexicon categorizes words in a binary fashion into positive and negative categories. 
+
+The AFINN lexicon assigns words with a score that runs between -5 and 5, with negative scores indicating negative sentiment and positive scores indicating positive sentiment.
+
+
+#### Sentiment Analysis
+
+##### Frequency of Positive vs. Negative words in Media Tweets Plot
+```{r message=FALSE, warning=FALSE}
+overall_sentiment <-
+  tidy_less %>%
+  inner_join(get_sentiments("bing")) %>% 
+  count(date, sentiment) %>% 
+  spread(sentiment,n, fill = 0) 
+head(overall_sentiment)
+```
+
+##### Plot: Frequency of Positive vs. Negative Words in Media Tweets
+```{r message=FALSE, warning=FALSE}
+# The below is an illustration of a Negative and Positive on one plot.
+overall_sentiment_plot <- 
+  ggplot(overall_sentiment, aes(x = date)) +
+  geom_line(aes(y = negative),color = "blue") +
+  geom_line(aes(y = positive), color = "red") +
+  theme_minimal()+
+  ylab("Frequency of Positive vs. Negative Words in Media Tweets")+
+  xlab("Date")
+overall_sentiment_plot
+```
+##### Analysis of Results:
+From the plot shown above, there is an increasing trend across both the Positive(red) and Negative(blue) words present in the media twitter posts that span 6 media agencies collectively. This trend suggests that the amount of posistive and negative words present in each tweet per day has gradually increased.The amount of negative words has remained above the amount of positive words per day. The negative words out weighs the positive words, especially after June as the amount of negative words peaked. After this peak, a fall in negative words came about but picked up again. Thereafter the amount of negative words remained in the 200 to 300 words range. With regards to the posistive words per day, the trend can be described as gradual and slightly flat as the posts after June had stayed in the same range. 
+
+Can go on to discuss the lockdown, restrictions, economy, governmental decision making and recent events that could have influenced the spike in number of negative words from June on wards.
+
+```{r message=FALSE, warning=FALSE}
+# Most common Positive and Negative words for Media tweets
+common <-  tidy_less %>%
+  inner_join(get_sentiments("bing")) %>% 
+  count(word,sentiment)
+head(common)
+```
+
+##### Plot: Top 20 Most Common Positive and Negative Words for the Media Tweets.
+```{r message=FALSE, warning=FALSE}
+common %>%
+  group_by(sentiment) %>%
+  top_n(20) %>%
+  ungroup() %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(word, n, fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~sentiment, scales = "free_y") +
+  labs(y = "Contribution to sentiment",
+       x = NULL) +
+  coord_flip()
+```
+##### Analysis of Results:
+The above illustrates the top 20 positive and negative words that contributed to the sentiment of the general tweets tweeted by the media agencies.
+
+
+```{r message=FALSE, warning=FALSE}
+# Top 20 most frequently posted words
+media_desc <- tidy_less %>%
+        count(word) %>%
+        arrange(desc(n)) 
+head(media_desc)
+```
+
+```{r, message=FALSE, warnings=FALSE}
+# Select only top words
+media_20 <- media_desc[1:20,]
+head(media_20)
+```
+
+##### Plot: Top 20 Words
+```{r message=FALSE, warning=FALSE}
+#create factor variable to sort by frequency
+media_desc$word <- factor(media_desc$word, levels = media_desc$word[order(media_desc$n,decreasing=TRUE)])
+
+ggplot(media_20, aes(x=reorder(word, -n), y=n, fill=word))+
+  geom_bar(stat="identity")+
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  ylab("Number of Times Word Appears in Covid-19 related tweets")+
+  xlab("")+
+  guides(fill=FALSE)
+```
+##### Analysis of Results:
+The most frequently tweeted word for the general media tweets is "covid" and "19". One can asssume that the most tweeted word by the media agencies would be "covid-19".
+
+
+### Visualise emotions of the media tweets
+```{r}
+library(textdata)
+overall_nrc <-
+  tidy_less %>%
+  inner_join(get_sentiments("nrc")) %>% 
+  count(sentiment) %>%
+  group_by(sentiment)
+head(overall_nrc)
+```
+
+##### Plot: Number of Times Emotion Appears in Overall Media
+```{r}
+ggplot(overall_nrc, aes(x = reorder(sentiment, -n), y = n, fill = sentiment))+
+  geom_bar(stat = "identity")+
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  ylab("Number of Times emotion appears in overall Media")+
+  xlab("")+
+  guides(fill = FALSE)
+```
+##### Analysis of Results:
+With the use of the NRC lexicon, the resulting sentiments are different form using the BING lexicon. In this case positive words posted by media agencies have appeared the most.This can be deduced from the fact that teh NRC lexicon has more positive word associations than in the BING lexicon, but the BING lexicon has more negative word associations than the NRC lexicon.
+
+### Sentiment over time per agency
+```{r}
+media_nrc_day <-
+  tidy_less %>%
+  inner_join(get_sentiments("nrc")) %>% 
+  count(date,sentiment) #%>%
+  #group_by(sentiment)
+  #spread(sentiment,n, fill = 0) 
+media_nrc_day
+```
+
+##### Plot: Number of Times Sentiment Appears in COVID-19 Related Tweets
+```{r}
+ggplot(media_nrc_day, aes(x = date, y = n))+
+  geom_line(aes(fill = sentiment))+
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  ylab("Number of Times sentiment appears in Covid-19 related tweets")+
+  xlab("")+
+  guides(fill=FALSE)+
+  facet_wrap(~sentiment)
+```
+##### Analysis of Results:
+Plots illustrate a good distribution of sentiments. All sentiments have and upward trend, suggesting an increase of of use. Sentiments such as Negative,positive and trust display the most upward trend. Also having the most number of appearances. 
+
+
+
+### COVID-19 Related Sentiment
+
+#### Pre-Process Media Timelines
+```{r message=FALSE, warning=FALSE}
+# Import COVID-19 tweets
+tweets_covid <- read.csv("data/data_raw/covid_tweets.csv", stringsAsFactors = FALSE)
+head(tweets_covid)
+```
+
+```{r message=FALSE, warning=FALSE}
+# Tokenising tweets_covid
+tidy_covid<- tweets_covid %>%
+  select(created_at, screen_name,text,favorite_count,retweet_count) %>%
+  unnest_tokens("word", text)
+head(tidy_covid)
+```
+
+```{r message=FALSE, warning=FALSE}
+# Separate date and time
+tidy_covid <- tidy_covid %>% 
+  separate(created_at, into = c("date", "time"), sep = "\\s", extra = "merge") %>% 
+  mutate(date = as.Date(date,"%Y-%m-%d"))
+head(tidy_covid)
+```
+
+```{r message=FALSE, warning=FALSE}
+# Removing stop words and more meaningless words.
+data("stop_words")
+tidy_covid<-tidy_covid %>%
+  anti_join(stop_words) %>% 
+  filter(!(word == "https"|
+           word == "rt" |
+           word == "t.co" |
+           word == "amp" |
+           word == " ' " ))
+head(tidy_covid)
+```
+#### Frequency of Positive vs. Negative words in Tweets related to Covid-19
+```{r message=FALSE, warning=FALSE}
+# Negative and positive on one plot
+overall_covid <-
+  tidy_covid %>%
+  inner_join(get_sentiments("bing")) %>% 
+  count(date, sentiment) %>% 
+  spread(sentiment,n, fill = 0) 
+head(overall_covid)
+```
+
+```{r message=FALSE, warning=FALSE}
+# Positive and Negative on one plot.
+overall_covid_plot <- 
+  ggplot(overall_covid, aes(x = date)) +
+  geom_line(aes(y = negative),color ="blue") +
+  geom_line(aes(y = positive), color = "red") +
+  theme_minimal()+
+  ylab("Frequency of Positve vs. Negative Words in Tweets related to Covid-19")+
+  xlab("Date")
+head(overall_covid_plot)
+```
+
+##### Analysis of Results:
+An upward tread exists in both positive (red) and negative (blue) tweeted regarding Covid-19 per day.For the majority of the graph, the negative words remain above the amount of positive words posted per day.A spike of negative words was recorded after the month of June. Recording 3 spikes in the number of negative tweets, followed by a fall in the the number of negative words in tweets. Although a fall in negative words was recorded a quarter way through the month of June, a gradual upward trend remained. The number of positive words that exist in tweets per day remained for the majorty of the time period below the negative words. This suggests that during and lockdown period, the media agencies had mostly posted tweets that contained negative sentiments rearding the Covid-19. As the number of negative words tweeted per day is substantially  higher than that of positive words tweeted per day.
+
+```{r message=FALSE, warning=FALSE}
+# Top 20 most frequently posted words
+covid_desc <- tidy_covid %>%
+        count(word) %>%
+        arrange(desc(n)) 
+head(covid_desc)
+```
+
+```{r message=FALSE, warnings=FALSE}
+#select only top words
+covid_20<-covid_desc[1:20,]
+head(covid_20)
+```
+
+##### Plot: Top 20 Words
+```{r}
+# create factor variable to sort by frequency
+covid_desc$word <- factor(covid_desc$word, 
+                          levels = covid_desc$word[order(covid_desc$n,decreasing = TRUE)])
+
+ggplot(covid_20, aes(x = reorder(word, -n), y = n, fill = word))+
+  geom_bar(stat = "identity")+
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  ylab("Number of Times Word Appears in Covid-19 related tweets")+
+  xlab("")+
+  guides(fill = FALSE)
+```
+##### Analysis of Results:
+The most frequently tweeted word regarding Covid-19 is "covid" and "19". One can asssume that the most tweeted word by the media agencies would be "covid-19".
+
+```{r}
+# Most common Positive and Negative words (Limited to 20)
+covid_contribution <-  tidy_covid %>%
+  inner_join(get_sentiments("bing")) %>% 
+  count(word,sentiment)
+head(covid_contribution)
+```
+##### Plot: Contribution to Sentiment
+```{r}
+covid_contribution %>%
+  group_by(sentiment) %>%
+  top_n(20) %>%
+  ungroup() %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(word, n, fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~sentiment, scales = "free_y") +
+  labs(y = "Contribution to sentiment",
+       x = NULL) +
+  coord_flip()
+```
+The above illustrates the top 20 positive and negative words that contributed to the sentiment of the Covid-19 tweets tweeted by the media agencies.
+
+
+```{r}
+# Frequency positive vs negative words per media agency regarding COVID-19
+overall_covid_agency <-
+  tidy_covid %>%
+  inner_join(get_sentiments("bing")) %>% 
+  count(screen_name,date, sentiment) %>% # Count screen names assigns the number of positive and negative words per day by agency
+  spread(sentiment,n, fill = 0) 
+head(overall_covid_agency)
+```
+
+##### Plot: Frequency of Positve vs. Negative Words Related to COVID-19 per Agency
+```{r}
+overall_covid_plot <- 
+  ggplot(overall_covid_agency, aes(x = date)) +
+  geom_line(aes(y= negative),color="blue") +
+  geom_line(aes(y = positive), color = "red") +
+  theme_minimal()+
+  ylab("Frequency of Positve vs. Negative Words related to Covid-19 per Agency")+
+  xlab("Date") +
+  facet_wrap(~screen_name, ncol = 2)
+overall_covid_plot
+```
+
+##### Analysis of Results:
+The illustration above illustrates the number of positve vs negative words present in the tweets of the 6 media agencies per day.ENCA, EWNupdates, IOL, SABCNews and TimesLIVE have all started posting tweets in the month of May. Whereas New24 only started posting in the Month of June reagrding Covid-19.
+
+ENCA,IOL, News24 and SABCNews has recorded the highest number of negative words since the start of June.
+
+
+
+### Visualise emotions of the covid tweets
+```{r}
+covid_nrc <-
+  tidy_covid %>%
+  inner_join(get_sentiments("nrc")) %>% 
+  count(sentiment) %>%
+  group_by(sentiment)
+  #spread(sentiment,n, fill = 0) 
+covid_nrc
+```
+
+##### Plot: Number of Times Sentiment Appears in COVID-19 Related Tweets
+```{r}
+ggplot(covid_nrc, aes(x=reorder(sentiment, -n), y=n, fill=sentiment))+
+  geom_bar(stat="identity")+
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  ylab("Number of Times sentiment appears in Covid-19 related tweets")+
+  xlab("")+
+  guides(fill=FALSE)
+```
+##### Analysis of Results:
+With the use of the NRC lexicon, the resulting sentiments are different form using the BING lexicon. In this case positive words posted by media agencies have appeared the most.This can be deduced from the fact that teh NRC lexicon has more positive word associations than in the BING lexicon, but the BING lexicon has more negative word associations than the NRC lexicon.
+
+
+
+### Sentiment over time per agency
+```{r}
+covid_nrc_day <-
+  tidy_covid %>%
+  inner_join(get_sentiments("nrc")) %>% 
+  count(date,sentiment)
+head(covid_nrc_day)
+```
+
+##### Plot: Number of Times Sentiment Appears in COVID-19 Related Tweets
+```{r}
+ggplot(covid_nrc_day, aes(x = date, y = n))+
+  geom_line(aes(fill = sentiment))+
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  ylab("Number of Times sentiment appears in Covid-19 related tweets")+
+  xlab("")+
+  guides(fill = FALSE)+
+  facet_wrap(~sentiment)
+```
+##### Analysis of Results:
+Using the NRC lexicon, the categories have been faceted into their own plots. Clearly illustrating the number of times the sentiment appears in a tweet. The fear, negative, positive and trust sentiments show strong upward trends, which also display the highest recording of appearances.All in all the plots show a well distributed sentiment.
+
+```{r}
+# Top 20 most frequently posted words
+covid_desc <- tidy_covid %>%
+        count(word) %>%
+        arrange(desc(n)) 
+covid_desc
+```
+
+
+```{r, message=FALSE, warnings=FALSE}
+# Select only top words
+covid_20<-covid_desc[1:20,]
+covid_20
+```
+
+
+
+## Topics Covered 
+
+### Topic Modelling
+#### Latent Dirichlet Allocation (LDA)
+Load data 
+```{r message=FALSE, warning=FALSE}
+data("tidy_covid_DTM")
+```
+
+```{r message=FALSE, warning=FALSE}
+covid_topic_model <- LDA(tidy_covid_DTM, 
+                    k = 6, 
+                    control = list(seed = 321))
+```
+
+```{r message=FALSE, warning=FALSE}
+covid_topics <- tidy(covid_topic_model, matrix = "beta")
+
+covid_top_terms <- 
+  covid_topics %>%
+    group_by(topic) %>%
+      top_n(10, beta) %>%
+        ungroup() %>%
+          arrange(topic, -beta)
+```
+
+##### Plot: Topic Model of Media News Tweets
+```{r message=FALSE, warning=FALSE}
+covid_top_terms %>%
+  mutate(term = reorder(term, beta)) %>%
+    mutate(topic = paste("Topic #", topic)) %>%
+    ggplot(aes(term, beta, fill = factor(topic))) +
+      geom_col(show.legend = FALSE) +
+        facet_wrap(~ topic, scales = "free") +
+          theme_minimal()+
+          theme(plot.title = 
+            element_text(hjust = 0.5, size=18))+
+          labs(
+            title = "Topic Model of Media News Tweets",
+            caption = "Top Terms by Topic (betas)"
+          )+
+          ylab("")+
+          xlab("")+
+          coord_flip()
+```
+
+
+
+
+#### Structural Topic Modeling
+#### General Topics
+The following analysis will be conducted on the general topics that were mentioned throughout the raw timelines of all 6 media accounts
+```{r message=FALSE, warning=FALSE}
+topics_media <- read.csv("data/data_raw/media_timelines.csv", stringsAsFactors = FALSE)
+head(topics_media)
+```
+
+```{r message=FALSE, warning=FALSE}
+processed <- textProcessor(topics_media$text, metadata = topics_media)
+```
+
+```{r message=FALSE, warning=FALSE}
+out <- prepDocuments(processed$documents , processed$vocab, processed$meta)
+```
+
+```{r message=FALSE, warning=FALSE}
+docs <- out$documents
+vocab <- out$vocab
+meta <-out$meta
+```
+
+```{r message=FALSE, warning=FALSE}
+First_STM <- stm(documents = out$documents, 
+                 vocab = out$vocab,
+                 K = 10,
+                 max.em.its = 75, data = out$meta,
+                 init.type = "Spectral", verbose = FALSE)
+```
+
+##### Plot: Top Words Associated with Each Topic (General Tweets)
+The plot below is an illustration of the top 10 topics that were mentioned within the COVID-19 related tweets by the 6 media accounts.
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+plot(First_STM)
+```
+
+```{r}
+findThoughts(First_STM, 
+             texts = topics_media$documents,
+             n = 2, 
+             topics = 3)
+
+```
+
+```{r}
+findingk <- searchK(out$documents, 
+                    out$vocab, 
+                    K = c(10:30),
+                    data = meta, 
+                    verbose=FALSE)
+```
+
+##### Plot: Finding the k Value
+```{r}
+plot(findingk)
+```
+
+
+
+#### COVID-19 Topics
+The following analysis will be conducted on the topics that were mentioned throughout the timelines of all 6 media accounts. 
+```{r}
+topics_covid <- read.csv("data/data_raw/covid_tweets.csv", stringsAsFactors = FALSE)
+head(topics_covid)
+```
+
+```{r message=FALSE, warning=FALSE}
+processed2 <- textProcessor(topics_covid$text, metadata = topics_covid)
+```
+
+```{r message=FALSE, warning=FALSE}
+out2 <- prepDocuments(processed2$documents , processed2$vocab, processed2$meta)
+```
+
+```{r message=FALSE, warning=FALSE}
+docs2 <- out2$documents
+vocab2 <- out2$vocab
+meta2 <-out2$meta
+```
+
+```{r message=FALSE, warning=FALSE}
+Second_STM <- stm(documents = out2$documents, 
+                 vocab = out2$vocab,
+                 K = 10,
+                 max.em.its = 75, 
+                 data = out2$meta,
+                 init.type = "Spectral", 
+                 verbose = FALSE)
+```
+
+##### Plot: Top Words Associated with Each Topic (COVID-19- related Tweets)
+The plot below is an illustration of the top 10 topics that were mentioned within the COVID-19 related tweets by the 6 media accounts. 
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+plot(Second_STM)
+```
+
+```{r}
+findThoughts(Second_STM, 
+             texts = covid_tweets$documents,
+             n = 2, 
+             topics = 3)
+
+```
+
+```{r}
+findingk2 <- searchK(out2$documents, 
+                    out2$vocab, 
+                    K = c(10:30),
+                    data = meta, 
+                    verbose=FALSE)
+```
+
+##### Plot: Finding the k Value
+```{r}
+plot(findingk2)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

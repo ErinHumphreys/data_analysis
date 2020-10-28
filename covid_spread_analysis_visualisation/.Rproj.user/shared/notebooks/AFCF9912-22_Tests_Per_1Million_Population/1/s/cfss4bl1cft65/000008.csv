@@ -1,0 +1,4 @@
+"0","tests <- tests %>% "
+"0","  mutate(tests_per_pop_1mil = as.integer(tests_per_pop_1mil),"
+"0","         tests_per_pop_1mil_1 = format(tests_per_pop_1mil, big.mark = "",""))"
+"0","tests"

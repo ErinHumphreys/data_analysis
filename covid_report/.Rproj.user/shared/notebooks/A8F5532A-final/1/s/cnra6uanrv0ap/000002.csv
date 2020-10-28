@@ -1,0 +1,3 @@
+"0","tidy_covid_tweets %>%"
+"0","  count(word) %>%"
+"0","    arrange(desc(n))"

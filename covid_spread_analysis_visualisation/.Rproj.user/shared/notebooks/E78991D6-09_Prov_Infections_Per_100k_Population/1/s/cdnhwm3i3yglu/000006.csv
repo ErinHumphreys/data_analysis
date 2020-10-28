@@ -1,0 +1,3 @@
+"0","covid <- new3 %>% "
+"0","  mutate(province = factor(province, levels = c(""LP"", ""MP"", ""NC"", ""FS"", ""NW"", ""KZN"", ""GP"", ""EC"", ""WC"")))"
+"0","covid"

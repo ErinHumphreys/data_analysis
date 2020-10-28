@@ -1,0 +1,23 @@
+{
+    "id": "4CB738B5",
+    "path": "~/r_projects/r_assignment/final/22_Africa_Infections_And_Deaths.Rmd",
+    "project_path": "22_Africa_Infections_And_Deaths.Rmd",
+    "type": "r_markdown",
+    "hash": "3709994672",
+    "contents": "",
+    "dirty": false,
+    "created": 1592323171064.0,
+    "source_on_save": false,
+    "relative_order": 11,
+    "properties": {
+        "chunk_output_type": "inline"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1592314309,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592314309,
+    "read_only": false,
+    "read_only_alternatives": []
+}

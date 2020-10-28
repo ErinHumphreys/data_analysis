@@ -1,0 +1,7 @@
+"0","active_cases_data <- active_cases_data %>% "
+"0","  left_join(deaths_data) %>% "
+"0","  mutate(active_cases = confirmed_cases - (recoveries + deaths)) %>% "
+"0","  select(date,province, confirmed_cases, active_cases)"
+"2","Joining, by = c(""date"", ""province"")
+"
+"0","active_cases_data"

@@ -1,0 +1,4 @@
+"0","```r
+# Open RDS file. 
+findingk <- read_rds(\"data/data_out/findingk_media_tweets.rds\")
+```"

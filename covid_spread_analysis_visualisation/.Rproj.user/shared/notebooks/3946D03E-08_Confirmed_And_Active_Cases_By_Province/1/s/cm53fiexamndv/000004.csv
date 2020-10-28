@@ -1,0 +1,2 @@
+"0","saveRDS(active_cases_data, ""data/data_out/08_confirmed_cases_and_active_cases_by_province.rds"")"
+"0","write.csv(active_cases_data, ""data/data_out/08_confirmed_cases_and_active_cases_by_province.csv"")"

@@ -1,0 +1,5 @@
+"0","covid <- deaths %>% "
+"0","  mutate(date = dmy(date),"
+"0","         deaths = total) %>% "
+"0","  select(date, deaths)"
+"0","covid"

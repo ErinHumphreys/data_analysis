@@ -1,0 +1,92 @@
+---
+title: "Public vs Private tests"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(readr)
+library(utils)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+
+library(rvest)
+library(selectr)
+```
+
+```{r}
+data1 <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/nicd_daily_national_report.csv", na.strings = "", fileEncoding = "UTF-8-BOM", stringsAsFactors = TRUE)
+data1
+```
+
+```{r}
+clean1 <- data %>% 
+  mutate(date = dmy(date),
+         total_tests = testing_public + testing_private) %>% 
+  select(date, testing_public, testing_private, total_tests)
+clean1
+```
+
+```{r}
+data2 <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_timeline_testing.csv",na.strings = "", fileEncoding = "UTF-8-BOM")
+data2
+```
+
+
+```{r}
+max_test <- data2 %>% 
+  mutate(date = dmy(date),
+         max_tests = cumulative_tests) %>% 
+  select(date, max_tests) %>% 
+  filter(date ==max(date))
+max_test
+```
+
+```{r}
+new <- data.frame(
+  
+)
+```
+
+<!-- NEW -->
+
+
+```{r}
+ncid<-read_html("https://www.nicd.ac.za/latest-confirmed-cases-of-covid-19-in-south-africa-12-june-2020/")
+ncid
+```
+
+```{r}
+ncid_pub_pri<-html_node(ncid, xpath='//*[@id="main"]/div/div/div/section[2]/div/div/div[1]/div/div/div[3]/div/table[2]')
+ncid_pub_pri
+```
+
+
+```{r}
+pub_pri <- html_table(ncid_pub_pri, fill = TRUE, header = TRUE)
+pub_pri
+```
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,6 @@
+"0","```r
+covid_desc <- tidy_covid %>%
+        count(word) %>%
+        arrange(desc(n)) 
+covid_desc
+```"

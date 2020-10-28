@@ -1,0 +1,7 @@
+"0","covid_nrc_day <-"
+"0","  tidy_covid %>%"
+"0","  inner_join(get_sentiments(""nrc"")) %>% "
+"0","  count(date,sentiment)"
+"2","Joining, by = ""word""
+"
+"0","head(covid_nrc_day)"

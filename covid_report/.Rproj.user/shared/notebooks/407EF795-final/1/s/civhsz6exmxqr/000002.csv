@@ -1,0 +1,4 @@
+"0","```r
+# Save as RDS file. 
+write_rds(findingk2, \"data/data_out/findingk_covid_tweets.rds\")
+```"

@@ -1,0 +1,2 @@
+"0","gender_deaths <- read.csv(""gender_deaths.csv"", stringsAsFactors = F)"
+"0","gender_deaths"

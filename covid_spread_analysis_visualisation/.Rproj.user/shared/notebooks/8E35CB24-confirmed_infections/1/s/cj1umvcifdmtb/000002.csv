@@ -1,0 +1,2 @@
+"0","data <- read.csv(""https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_confirmed.csv"", na.strings = """", fileEncoding = ""UTF-8-BOM"", stringsAsFactors = TRUE)"
+"0","data"

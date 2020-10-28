@@ -1,0 +1,4 @@
+"0","```r
+# Open data in RDS file. 
+tidy_less <- read_rds(\"data/data_out/tidy_less.rds\")
+```"

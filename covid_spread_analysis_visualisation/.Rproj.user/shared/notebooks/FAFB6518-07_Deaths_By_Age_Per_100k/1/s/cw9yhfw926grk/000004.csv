@@ -1,0 +1,5 @@
+"0","final <- final %>% "
+"0","  mutate(Deaths_pop = Deaths/(Population / 1000) * 100) %>% "
+"0","  arrange(desc(Deaths_pop)) %>% "
+"0","  select(Age, Deaths_pop)"
+"0","final"

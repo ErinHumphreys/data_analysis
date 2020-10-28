@@ -1,0 +1,121 @@
+---
+title: "Daily Tests and Positive Cases"
+output: html_notebook
+---
+
+```{r Setup, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(readr)
+library(utils)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(zoo)
+library(formattable)
+```
+
+#Read raw data for number of tests
+```{r}
+test_data <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_timeline_testing.csv", na.strings = "", fileEncoding = "UTF-8-BOM")
+test_data
+```
+
+#Write raw data for number of tests
+```{r}
+write.csv(test_data, "data/data_raw/raw_13_daily_tests_and_positive_cases/raw_test_data.csv")
+```
+
+#Clean data
+```{r}
+test_num <- test_data %>% 
+  mutate(date = as.Date(date,format = "%d-%m-%y")) %>% 
+  mutate(Tests_day = cumulative_tests - lag(cumulative_tests)) %>% 
+  select(date, Tests_day) # use coalesce to remove NA's
+test_num
+```
+
+#Read raw positive tests data
+```{r}
+data <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_confirmed.csv",na.strings = "", fileEncoding = "UTF-8-BOM", stringsAsFactors = TRUE)
+data
+```
+
+#Write raw data for positive tests
+```{r}
+write.csv(data, "data/data_raw/raw_13_daily_tests_and_positive_cases/raw_positive_test_data.csv")
+```
+
+#Clean data and calculate positive tests per day
+```{r}
+pos_test <- data %>% 
+  mutate(date = as.Date(date,format = "%d-%m-%y"),
+         Pos_day = total - lag(total)) %>% 
+  select(date, Pos_day) # have to use coalesce to remove NA's
+pos_test
+```
+
+#Join dataframes
+```{r}
+new <- pos_test %>% 
+  left_join(test_num, "date")
+new
+```
+
+#Final dataframe
+```{r}
+new2 <- new %>% 
+   mutate(date = as.Date(date,format = "%d-%m-%y"),
+          pos_test_per = (Pos_day/Tests_day)*100) %>% 
+   select(date,Tests_day,Pos_day, pos_test_per)
+new2
+```
+
+#Moving average data
+```{r}
+mv <- new2 %>% 
+  mutate(mov_av = rollmean(x = pos_test_per, # column to take
+                           k = 7, # rolling time period
+                           align = "right", #leave values above the top
+                           fill = NA)) %>% 
+  select(date, Tests_day, Pos_day, pos_test_per, mov_av) %>% 
+  filter(date >= today() - days(27))
+mv
+```
+
+#Write to data_out folder
+```{r}
+saveRDS(mv, "data/data_out/13_daily_tests_and_positive_cases.rds")
+write.csv(mv, "data/data_out/13_daily_tests_and_positive_cases.csv")
+```
+
+#Plot for Daily Tests and Positive Cases
+```{r echo=TRUE, message=FALSE}
+daily_test_pos_case_plot <- ggplot(data = new2,
+                                   mapping = aes(x = date,
+                                                 y = Tests_day)) + 
+  geom_point(aes(color = "#b54c49",
+                 fill = "#b54c49", 
+                 size = Tests_day),
+             show.legend = FALSE) +
+  labs(x = NULL,
+       y = "Number of tests per day", 
+       title = "Daily Tests and Positive Cases",
+       caption = "Updated: 16 Jue 2020") +
+  scale_x_date(name = NULL, date_labels = "%d/%m", date_breaks = "7 day")+
+  theme_minimal() + 
+  theme(panel.background = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_line(linetype = "dotted",color = "lightblue"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.title = element_text(color = "white", face = "bold", size = rel(1.5)),
+        plot.caption = element_text(color = "white", size = 11, face = "bold", hjust = 0.0),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line = element_blank(),
+        axis.text.x = element_text(size = 9, color = "#969da1"),
+        axis.title.y = element_text(color = "white", size = 11, face = "bold"),
+        axis.text.y = element_text(size = 9, color = "#969da1"),
+        panel.grid.major.x = element_blank())
+daily_test_pos_case_plot
+```
+

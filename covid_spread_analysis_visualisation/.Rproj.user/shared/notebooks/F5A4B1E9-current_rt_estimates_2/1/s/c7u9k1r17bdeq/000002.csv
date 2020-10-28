@@ -1,0 +1,6 @@
+"0","new <- rt %>% "
+"0","  mutate(date = ymd(date),"
+"0","         province = state) %>% "
+"0","  select(province, date, ML, High_90, Low_90) %>% "
+"0","  filter(province == ""Total RSA"")"
+"0","new"

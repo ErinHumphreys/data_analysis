@@ -1,0 +1,84 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r Setup, include=FALSE}
+library(tidyverse)
+library(readr)
+library(utils)
+library(rvest)
+library(ggplot2)
+```
+
+### Provincial Tests
+```{r echo=FALSE}
+pro_test <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_testing.csv", na.strings = "", fileEncoding = "UTF-8-BOM")
+
+pro_test
+```
+
+```{r}
+clean <- pro_test %>% 
+  mutate(date = as.Date(date,format = "%d-%m-%y")) %>% 
+  pivot_longer(c("EC","FS","GP","KZN","LP","MP","NC","NW","WC"), names_to = "Province", values_to = "Test")
+clean
+```
+
+```{r}
+# can actually put this above
+new <- clean %>% 
+  mutate(Province = Province,
+         Test = Test) %>% 
+  select(date, Province, Test) %>%
+  filter(date == max(date)) %>% 
+  arrange(desc(Test)) %>% 
+  #set levels
+  mutate(Province = factor(Province, levels = c("GP","WC","KZN","EC","FS","MP","LP","NW","NC")))
+new  
+```
+Set level
+```{r}
+new1 <- new %>% 
+  mutate(Test = format(Test, big.mark = ","))
+new1
+```
+
+
+## Provincial Testing Plot
+```{r}
+pt_plot <- ggplot(data = new1 ,
+                  mapping = aes(x =Province, 
+                                y = Test)) +
+  geom_bar(stat= "identity",
+           width = 0.9,
+           fill = "#b54c49",
+           color = "#b54c49") +
+  geom_text(aes(label = Test), 
+            position = position_dodge(width = 0.9), 
+            color = "white",
+            hjust = 0.50,
+            vjust = -0.50)+
+  labs(x= NULL,
+       y = NULL,
+       title = "Provincial Tests",
+       subtitle = "This data is not regularly updated. This the most recent data available",
+       caption = "Updated: 16 June 2020") + 
+  theme_minimal() + 
+  theme(panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_text(size = 8, color = "#969da1", hjust = 1.0, vjust = 1),
+        axis.text.y = element_blank(),
+        plot.title = element_text(face = "bold", size = rel(1.5), hjust = 0.0, colour = "white"),
+        plot.subtitle = element_text(size = 11, color = "#969da1", hjust = 0.0),
+        plot.caption = element_text(size = 11, hjust = 0.0, face = "bold", color = "white"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+        
+pt_plot
+```

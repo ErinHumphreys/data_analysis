@@ -1,0 +1,5 @@
+"0","pos_test <- data %>% "
+"0","  mutate(date = as.Date(date,format = ""%d-%m-%y""),"
+"0","         Pos_day = total - lag(total)) %>% "
+"0","  select(date, Pos_day) # have to use coalesce to remove NA's"
+"0","pos_test"

@@ -1,0 +1,5 @@
+"0","```r
+sa <- ecdc2020 %>% 
+  filter(Entity == \"South Africa\")
+sa
+```"

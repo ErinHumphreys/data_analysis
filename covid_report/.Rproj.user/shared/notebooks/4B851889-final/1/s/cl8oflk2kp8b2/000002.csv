@@ -1,0 +1,10 @@
+"0","```r
+covid_topics <- tidy(covid_topic_model, matrix = \"beta\")
+
+covid_top_terms <- 
+  covid_topics %>%
+    group_by(topic) %>%
+      top_n(10, beta) %>%
+        ungroup() %>%
+          arrange(topic, -beta)
+```"

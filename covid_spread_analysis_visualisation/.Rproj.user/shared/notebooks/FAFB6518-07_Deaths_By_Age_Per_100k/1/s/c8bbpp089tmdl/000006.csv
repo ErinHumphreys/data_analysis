@@ -1,0 +1,3 @@
+"0","new_age <- age_deaths %>%"
+"0","  select(Age, Deaths)"
+"0","new_age"

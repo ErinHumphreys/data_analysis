@@ -1,0 +1,5 @@
+"0","```r
+docs <- out$documents
+vocab <- out$vocab
+meta <-out$meta
+```"

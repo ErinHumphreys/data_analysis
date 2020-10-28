@@ -1,0 +1,7 @@
+"0","covid <- data %>% "
+"0","  pivot_longer(c('EC', 'FS','GP', 'KZN', 'LP', 'MP', 'NC', 'NW', 'WC'), names_to = ""province"", values_to = ""confirmed_cases"") %>% "
+"0","  mutate(date = dmy(date),"
+"0","         infec_per_day = total - lag(total)) %>% "
+"0","  select(date, province, confirmed_cases) %>% "
+"0","  filter(date == max(date))"
+"0","covid"

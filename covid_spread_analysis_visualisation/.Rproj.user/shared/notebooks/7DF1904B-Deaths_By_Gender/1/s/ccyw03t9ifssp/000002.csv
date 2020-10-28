@@ -1,0 +1,4 @@
+"0","```r
+gender_deaths <- read.csv(\"gender_deaths.csv\", stringsAsFactors = F)
+gender_deaths
+```"

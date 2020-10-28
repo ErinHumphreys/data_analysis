@@ -1,0 +1,4 @@
+"0","```r
+# Stemming: Replace words with its most basic conjugate form.
+covid_corpus  <- tm_map(covid_corpus, content_transformer(stemDocument), language = \"english\")
+```"

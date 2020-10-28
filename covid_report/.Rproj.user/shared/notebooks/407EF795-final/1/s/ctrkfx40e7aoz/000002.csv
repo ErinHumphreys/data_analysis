@@ -1,0 +1,6 @@
+"0","```r
+news_media <- get_timelines(c(\"News24\", \"eNCA\", \"SABCNews\", \"IOL\", \"TimesLIVE\", \"ewnupdates\"),
+                            n = 3200, 
+                            include_rts = FALSE)
+head(news_media)
+```"

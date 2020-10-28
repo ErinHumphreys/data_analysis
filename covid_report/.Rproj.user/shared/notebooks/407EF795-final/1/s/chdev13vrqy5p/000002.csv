@@ -1,0 +1,7 @@
+"0","```r
+# set a seed so that the output of the model is predictable
+tidy_covid_DTM_lda <- LDA(tidy_covid_DTM, k = 2, control = list(seed = 1234))
+tidy_covid_DTM_lda
+```"
+"1","A LDA_VEM topic model with 2 topics.
+"

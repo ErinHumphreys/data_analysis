@@ -1,0 +1,5 @@
+"0","# Create a DTM in tidytext."
+"0","tidy_covid_DTM <-"
+"0","  tidy_covid_tweets %>%"
+"0","  count(created_at, word) %>%"
+"0","  cast_dtm(created_at, word, n)"

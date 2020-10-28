@@ -1,0 +1,3 @@
+"0","death_pro <- read.csv(""https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_deaths.csv"", na.strings = """", fileEncoding = ""UTF-8-BOM"")"
+"0",""
+"0","death_pro"

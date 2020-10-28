@@ -1,0 +1,5 @@
+"0","av_daily <- av_daily %>% # for labelling purposes"
+"0","  mutate(week_av = as.integer(week_av),"
+"0","         weekly_tests1 = formatC(weekly_tests, big.mark = "",""),"
+"0","         week_av1 = formatC(week_av, big.mark = "",""))"
+"0","av_daily"

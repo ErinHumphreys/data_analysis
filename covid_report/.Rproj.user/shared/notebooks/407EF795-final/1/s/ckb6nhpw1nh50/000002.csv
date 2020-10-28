@@ -1,0 +1,8 @@
+"0","```r
+overall_sentiment <-
+  tidy_less %>%
+  inner_join(get_sentiments(\"bing\")) %>% 
+  count(date, sentiment) %>% 
+  spread(sentiment,n, fill = 0) 
+head(overall_sentiment)
+```"

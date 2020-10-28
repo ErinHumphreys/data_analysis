@@ -1,0 +1,5 @@
+"0","```r
+# Import COVID-19 tweets
+tweets_covid <- read.csv(\"data/data_raw/covid_tweets.csv\", stringsAsFactors = FALSE)
+head(tweets_covid)
+```"

@@ -1,0 +1,4 @@
+"0","```r
+# Use the gsub function again as follows (s+ describes a blank space)
+tidy_covid_tweets$word <- gsub(\"\\s+\",\"\",tidy_covid_tweets$word)
+```"

@@ -1,0 +1,5 @@
+"0","active_cases_data <- active_cases %>% "
+"0","  mutate(active_cases = total_cases - (total_recoveries + total_deaths),"
+"0","         active_cases = as.integer(active_cases)) %>% "
+"0","  select(date, active_cases)"
+"0","active_cases_data"

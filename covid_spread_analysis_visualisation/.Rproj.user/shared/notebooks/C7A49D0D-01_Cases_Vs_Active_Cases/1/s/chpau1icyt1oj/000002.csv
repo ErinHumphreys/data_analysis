@@ -1,0 +1,2 @@
+"0","active_and_confirmed_cases[is.na(active_and_confirmed_cases)] = 0 # replace NA with 0"
+"0","active_and_confirmed_cases"

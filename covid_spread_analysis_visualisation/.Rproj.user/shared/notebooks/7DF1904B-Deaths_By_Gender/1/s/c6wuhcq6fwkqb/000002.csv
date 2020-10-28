@@ -1,0 +1,10 @@
+"0","```r
+gender_deaths_data <- html_node(nicd_page, xpath = '//*[@id=\"main\"]/div/div/div/section[2]/div/div/div[1]/div/div/div[3]/div/table[4]')
+head(gender_deaths_data)
+```"
+"1","$node
+<pointer: 0x00000001ca177700>
+
+$doc
+<pointer: 0x00000001c47578e0>
+"

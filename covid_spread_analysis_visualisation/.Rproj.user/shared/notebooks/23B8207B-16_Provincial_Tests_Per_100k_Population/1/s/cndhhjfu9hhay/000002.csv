@@ -1,0 +1,9 @@
+"0","```r
+joined <- new %>% 
+  inner_join(new2, \"Province\")
+```"
+"1","Column `Province` joining factors with different levels, coercing to character vector
+"
+"0","```r
+joined
+```"

@@ -1,0 +1,212 @@
+---
+title: "Deaths by Age (per 100k)"
+output: html_notebook
+---
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library(rvest)
+library(selectr)
+library(tidyverse)
+library(magrittr)
+library(readr)
+library(utils)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+```
+
+#Age Population
+#Read raw data for age population
+```{r}
+data <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/official_stats/statssa_population_midyear_2019.csv", na.strings = "", fileEncoding = "UTF-8-BOM", stringsAsFactors = TRUE)
+data
+```
+
+#Clean data to get total population per age
+```{r}
+data1 <- data %>% 
+  select(Province, Age, Total)
+data1
+```
+
+#Write data for age population 
+```{r echo=TRUE}
+write_csv(data1, "data/data_raw/raw_07_deaths_by_age_per_100k/age_population.csv")
+```
+
+#Filter to get data for "All Provinces"
+```{r}
+data2 <- data1 %>% 
+  slice(163:179)
+data2
+```
+
+#clean data again
+```{r}
+data2 <- data2 %>% 
+  select(Age, Total)
+data2
+```
+
+#Pivot wider
+```{r}
+new_wide <- data2 %>% 
+  pivot_wider(names_from = Age, values_from = Total) 
+new_wide
+```
+
+#Rename columns to create desired data
+```{r}
+new <- new_wide %>% 
+  mutate(`0-9` = `0–4` + `5–9`,
+         `10-19` = `10–14` + `15–19`,
+         `20-29` = `20–24` + `25–29`,
+         `30-39` = `30–34` + `35–39`,
+         `40-49` = `40–44` + `45–49`,
+         `50-59` = `50–54` + `55–59`,
+         `60-69` = `60–64` + `65–69`,
+         `70-79` = `70–74` + `75–79`,
+         `80-89` = `80+`) 
+new
+```
+
+#Final clean/ sort data for population per age
+```{r}
+new_pop <- new %>% 
+  pivot_longer(c("0-9","10-19","20-29","30-39","40-49","50-59","60-69","70-79","80-89"), names_to = "Age", values_to = "Population") %>% 
+  select(Age, Population)
+new_pop
+```
+
+#Write clean/ sorted data again
+```{r echo=TRUE}
+write_csv(new_pop, "data/data_raw/raw_07_deaths_by_age_per_100k/final_gender_population.csv")
+```
+
+
+#Deaths by Age
+##Use screenscraping to read the webpage
+```{r}
+nicd_page <-read_html("https://www.nicd.ac.za/latest-confirmed-cases-of-covid-19-in-south-africa-13-june-2020/")
+nicd_page
+```
+
+```{r}
+age_deaths_data <- html_node(nicd_page, xpath='//*[@id="main"]/div/div/div/section[2]/div/div/div[1]/div/div/div[3]/div/table[5]')
+age_deaths_data
+```
+
+#Convert to HTML table
+```{r}
+age_deaths_table <- html_table(age_deaths_data, fill = TRUE, header = TRUE)
+age_deaths_table
+```
+
+#Convert HTML table to CSV format and write raw data
+```{r}
+write_csv(age_deaths_table, "data/data_raw/raw_07_deaths_by_age_per_100k/deaths_by_age.csv")
+```
+
+#Read CSV file raw data
+```{r}
+age_deaths <- read.csv("data/data_raw/raw_07_deaths_by_age_per_100k/deaths_by_age.csv", stringsAsFactors = F)
+age_deaths
+```
+
+#Get data for Age and Deaths only
+```{r}
+new_age <- age_deaths %>%
+  select(Age, Deaths)
+new_age
+
+new_age <- new_age[-c(12),] #delete row 12
+new_age
+```
+
+#Pivot wider
+```{r}
+new_wide <- new_age %>% 
+  pivot_wider(names_from = Age, values_from = Deaths) 
+new_wide
+```
+
+
+```{r}
+new <- new_wide %>% 
+  mutate(`80+` = `80-89` + `90-99`) %>% 
+  pivot_longer(c("0-9","10-19","20-29","30-39","40-49","50-59","60-69","70-79","80-89","Unknown"), names_to = "Age", values_to = "Deaths") %>% 
+  select(Age, Deaths)
+new
+```
+
+#Filter data 
+```{r}
+new <- new %>% 
+  slice(1:9)
+new
+```
+
+#Join dataframes from Age Population and Age Deaths
+```{r}
+final <- new_pop %>%
+  left_join(new, by = "Age")  
+final
+```
+
+
+#Create data for Deaths by Province per 100k
+```{r}
+final <- final %>% 
+  mutate(Deaths_pop = Deaths/(Population / 1000) * 100) %>% 
+  arrange(desc(Deaths_pop)) %>% 
+  select(Age, Deaths_pop)
+final
+```
+
+#Round of to nearest 2 decimals
+```{r}
+final <- final %>% # for labelling purposes
+  mutate(Deaths_pop = format(round(Deaths_pop, 1), nsmall = 2),
+         Deaths_pop = as.numeric(Deaths_pop))
+final
+```
+
+#Write to data_out folder
+```{r}
+saveRDS(final, "data/data_out/07_deaths_by_age_per_100k.rds")
+write.csv(final, "data/data_out/07_deaths_by_age_per_100k.csv")
+```
+
+#Plot
+```{r}
+plot <- ggplot(data = final,
+               mapping = aes(x = reorder(Age, Deaths_pop),
+                             y = Deaths_pop)) +
+  geom_bar(stat = "identity",
+           width = 0.9,
+           fill = "#b54c49",
+           color = "#b54c49") +
+  geom_text(aes(label = Deaths_pop), 
+            colour = "white", 
+            position = position_dodge(width = 1.0), 
+            hjust = + 0.50, 
+            vjust = - 0.50) +
+  labs(x = NULL, 
+       y = NULL, 
+       title = "Deaths by Age (per 100k)",
+       caption = "Updated: 16 June 2020") +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_text(size = 11, color = "#969da1"),
+        axis.text.y = element_blank(),
+        plot.title = element_text(face = "bold", size = rel(1.5), hjust = 0.0, colour = "white"), 
+        plot.caption = element_text(size = 11, hjust = 0, color = "white"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+plot
+```

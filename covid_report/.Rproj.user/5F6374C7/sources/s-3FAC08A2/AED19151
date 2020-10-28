@@ -1,0 +1,25 @@
+{
+    "id": "AED19151",
+    "path": "~/r_projects/r_assignment/Assignment2/final.Rmd",
+    "project_path": "final.Rmd",
+    "type": "r_markdown",
+    "hash": "878021251",
+    "contents": "",
+    "dirty": false,
+    "created": 1593110117699.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "chunk_output_type": "inline",
+        "cursorPosition": "651,67",
+        "scrollLine": "638"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1593116025,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1593116025767,
+    "read_only": false,
+    "read_only_alternatives": []
+}

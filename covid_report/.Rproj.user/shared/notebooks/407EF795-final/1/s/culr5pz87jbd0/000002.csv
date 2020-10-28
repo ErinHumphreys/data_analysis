@@ -1,0 +1,4 @@
+"0","```r
+# Open RDS file. 
+media_20 <- read_rds(\"data/data_out/media_20.rds\")
+```"

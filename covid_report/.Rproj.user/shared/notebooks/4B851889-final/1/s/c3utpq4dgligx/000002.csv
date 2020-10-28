@@ -1,0 +1,11 @@
+"0","# Positive and Negative on one plot."
+"0","overall_covid_plot <- "
+"0","  ggplot(overall_covid, aes(x = date)) +"
+"0","  geom_line(aes(y = negative),color =""blue"") +"
+"0","  geom_line(aes(y = positive), color = ""red"") +"
+"0","  theme_minimal()+"
+"0","  ylab(""Frequency of Positve vs. Negative Words in Tweets related to Covid-19"")+"
+"0","  xlab(""Date"")"
+"0","head(overall_covid_plot)"
+"1","$data
+"

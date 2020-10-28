@@ -1,0 +1,7 @@
+"0","```r
+# Save output as a CSV. 
+write.csv(\"data/data_out/media_tweets_tidy\")
+```"
+"1","\"\",\"x\"
+\"1\",\"data/data_out/media_tweets_tidy\"
+"

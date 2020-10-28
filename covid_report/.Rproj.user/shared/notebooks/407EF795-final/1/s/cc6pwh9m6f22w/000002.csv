@@ -1,0 +1,12 @@
+"0","```r
+covid_nrc <-
+  tidy_covid %>%
+  inner_join(get_sentiments(\"nrc\")) %>% 
+  count(sentiment) %>%
+  group_by(sentiment) 
+```"
+"1","Joining, by = \"word\"
+"
+"0","```r
+covid_nrc
+```"

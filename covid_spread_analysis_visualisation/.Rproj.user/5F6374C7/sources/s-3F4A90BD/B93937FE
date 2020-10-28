@@ -1,0 +1,25 @@
+{
+    "id": "B93937FE",
+    "path": "~/r_projects/r_assignment/final/Death_By_Province_Per_100k.Rmd",
+    "project_path": "Death_By_Province_Per_100k.Rmd",
+    "type": "r_markdown",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1592315807439.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "chunk_output_type": "inline",
+        "cursorPosition": "94,64",
+        "scrollLine": "90"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1592315907,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592315907702,
+    "read_only": false,
+    "read_only_alternatives": []
+}

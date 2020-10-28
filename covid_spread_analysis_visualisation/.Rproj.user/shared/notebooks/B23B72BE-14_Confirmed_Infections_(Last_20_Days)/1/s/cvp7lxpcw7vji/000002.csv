@@ -1,0 +1,2 @@
+"0","saveRDS(covid19, ""data/data_out/14_confirmed_infections_(last_20_days).rds"")"
+"0","write.csv(covid19, ""data/data_out/14_confirmed_infections_(last_20_days).csv"")"

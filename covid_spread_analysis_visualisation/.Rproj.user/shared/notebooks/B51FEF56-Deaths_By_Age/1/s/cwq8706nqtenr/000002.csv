@@ -1,0 +1,6 @@
+"0","```r
+
+new_wide <- new_age %>% 
+  pivot_wider(names_from = Age, values_from = Deaths) 
+new_wide
+```"

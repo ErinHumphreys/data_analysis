@@ -1,0 +1,4 @@
+"0","covid_join <- covid %>% "
+"0","  left_join(new2, by = ""province"")"
+"2","Column `province` joining character vector and factor, coercing into character vector"
+"0","covid_join "

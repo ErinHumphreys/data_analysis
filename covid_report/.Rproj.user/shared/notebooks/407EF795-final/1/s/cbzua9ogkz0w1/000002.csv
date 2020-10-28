@@ -1,0 +1,4 @@
+"0","```r
+# Save as RDS file. 
+write_rds(Second_STM, \"data/data_out/Second_STM.rds\")
+```"

@@ -1,0 +1,6 @@
+"0","```r
+covid19 <- covid %>%
+  group_by(country) %>% 
+  mutate(day = row_number())
+covid19
+```"

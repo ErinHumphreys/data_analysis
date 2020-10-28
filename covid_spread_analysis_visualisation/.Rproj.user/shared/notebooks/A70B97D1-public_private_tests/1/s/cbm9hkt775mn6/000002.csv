@@ -1,0 +1,6 @@
+"0","max_test <- data2 %>% "
+"0","  mutate(date = dmy(date),"
+"0","         max_tests = cumulative_tests) %>% "
+"0","  select(date, max_tests) %>% "
+"0","  filter(date ==max(date))"
+"0","max_test"

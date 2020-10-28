@@ -1,0 +1,10 @@
+"0","```r
+findThoughts(First_STM, 
+             texts = topics_media$documents,
+             n = 2, 
+             topics = 3)
+```"
+"1","
+ Topic 3: 
+ 	 
+"

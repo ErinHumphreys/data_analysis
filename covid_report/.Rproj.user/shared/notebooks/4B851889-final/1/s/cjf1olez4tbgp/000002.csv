@@ -1,0 +1,10 @@
+"0","```r
+# Remove stopwords as follows:
+data(\"stop_words\")
+    tidy_covid_tweets <- tidy_covid_tweets %>%
+      anti_join(stop_words) %>% 
+      filter(!(word == \"https\" |
+               word == \"rt\" |
+               word == \"t.co\" |
+               word == \"amp\"))
+```"

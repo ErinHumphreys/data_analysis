@@ -1,0 +1,4 @@
+"0","```r
+# Save as RDS file. 
+write_rds(common, \"data/data_out/common.rds\")
+```"

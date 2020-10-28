@@ -1,0 +1,37 @@
+"0","```r
+#ggplot(data = mv,mapping = aes(x=date, y = pos_test_per))
+
+mv_plot <- ggplot() +
+  geom_line(data = mv,
+            aes(x = date,
+                y = pos_test_per), 
+            color = \"red\")+
+  geom_line(data = mv, 
+            aes(x = date,
+                y = mov_av), 
+            color = \"grey\",
+            linetype = \"twodash\") +
+  geom_bar(data = mv, 
+           aes(x= date,
+               y = Tests_day),
+           stat = \"identity\",
+           width = 0.5,
+           color = \"blue\") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1),
+                     sec.axis = sec_axis(~., name = NULL))+
+  scale_x_date(date_labels = \"%d/%m\",date_breaks = \"1 day\") +
+  theme_minimal() + 
+  theme(panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_line(linetype = \"dashed\"),
+        plot.title = element_text(face = \"bold\", size = rel(1.5)),
+        plot.subtitle = element_text(color = \"grey60\"),
+        plot.caption = element_text(color = \"grey60\"),
+        panel.grid.minor = element_blank(),
+        axis.line.y.left = element_blank(),
+        axis.title.y.right = element_blank(),
+        panel.grid.major.x = element_blank()) +
+  labs(x = NULL,
+       y = NULL,
+       title = \"Positivity rate: Number of Tests vs Positive Cases\")
+mv_plot
+```"

@@ -1,0 +1,11 @@
+"0","```r
+# Removing stop words and extra meaningless words
+data(\"stop_words\")
+tidy_pols <- tidy_pol %>%
+  anti_join(stop_words) %>% 
+  filter(!(word == \"https\"|
+           word == \"rt\" |
+           word == \"t.co\" |
+           word == \"amp\"))
+head(tidy_pols)
+```"

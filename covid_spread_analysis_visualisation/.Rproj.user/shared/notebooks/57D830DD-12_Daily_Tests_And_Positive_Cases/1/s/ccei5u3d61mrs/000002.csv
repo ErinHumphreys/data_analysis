@@ -1,0 +1,9 @@
+"0","```r
+pos_test <- data %>% 
+  mutate(date = as.Date(date,format = \"%d-%m-%y\"),
+         Pos_day = total - lag(total)) %>% 
+  select(date, Pos_day)# %>% 
+ # filter(date >= \"2020-03-05\")
+#have to use coalesce to remove NA's
+pos_test
+```"

@@ -1,0 +1,15 @@
+"0","```r
+covid_contribution %>%
+  group_by(sentiment) %>%
+  top_n(20) %>%
+  ungroup() %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(word, n, fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~sentiment, scales = \"free_y\") +
+  labs(y = \"Contribution to sentiment\",
+       x = NULL) +
+  coord_flip()
+```"
+"1","Selecting by n
+"

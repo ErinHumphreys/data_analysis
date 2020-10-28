@@ -1,0 +1,4 @@
+"0","```r
+# Word Case: Force all text into lower case.
+covid_corpus <- tm_map(covid_corpus,  content_transformer(tolower)) 
+```"

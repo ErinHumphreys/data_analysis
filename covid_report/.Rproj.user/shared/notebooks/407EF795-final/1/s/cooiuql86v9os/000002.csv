@@ -1,0 +1,7 @@
+"0","```r
+First_STM <- stm(documents = out$documents, 
+                 vocab = out$vocab,
+                 K = 10,
+                 max.em.its = 75, data = out$meta,
+                 init.type = \"Spectral\", verbose = FALSE)
+```"

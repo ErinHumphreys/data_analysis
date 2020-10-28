@@ -1,0 +1,2 @@
+"0","# Create a document-term matrix from a Corpus object. The end of the code above specifies that we only want to include words that are at least two characters long. "
+"0","covid_DTM <- DocumentTermMatrix(covid_corpus, control = list(wordLengths = c(2, Inf)))"

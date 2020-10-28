@@ -1,0 +1,15 @@
+"0","```r
+final1 <- final %>% # for labelling purposes
+  mutate(Test_pop1 = format(round(Test_pop, 0), nsmall = 0),
+         Test_pop1 = formatC(Test_pop, big.mark = \",\"),
+         Province = str_replace(Province, \"WC\", \"Western Cape\"),
+         Province = str_replace(Province, \"EC\", \"Eastern Cape\"),
+         Province = str_replace(Province, \"GP\", \"Gauteng\"),
+         Province = str_replace(Province, \"KZN\", \"KwaZulu Natal\"),
+         Province = str_replace(Province, \"NW\", \"North West\"),
+         Province = str_replace(Province, \"FS\", \"Free State\"),
+         Province = str_replace(Province, \"NC\", \"Northern Cape\"),
+         Province = str_replace(Province, \"MP\", \"Mpumalanga\"),
+         Province = str_replace(Province, \"LP\", \"Limpopo\"))
+final1
+```"

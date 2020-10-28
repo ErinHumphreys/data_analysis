@@ -1,0 +1,4 @@
+"0","```r
+ecdc2020 <- read.csv(\"https://raw.githubusercontent.com/owid/owid-datasets/master/datasets/COVID-2019%20-%20ECDC%20(2020)/COVID-2019%20-%20ECDC%20(2020).csv\", na.strings = \"\", fileEncoding = \"UTF-8-BOM\")
+ecdc2020
+```"

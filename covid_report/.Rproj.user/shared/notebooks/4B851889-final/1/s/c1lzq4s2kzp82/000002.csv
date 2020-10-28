@@ -1,0 +1,15 @@
+"0","```r
+library(rtweet)
+library(maps)
+library(tidytext)
+library(tidyverse)
+# library(textdata)
+library(dplyr)
+library(tm)
+library(SnowballC)
+library(topicmodels)
+library(stm)
+library(tidyr)
+library(stringr)
+library(ggplot2)
+```"

@@ -1,0 +1,8 @@
+"0","mv <- new2 %>% "
+"0","  mutate(mov_av = rollmean(x = pos_test_per, # column to take"
+"0","                           k = 7, # rolling time period"
+"0","                           align = ""right"", #leave values above the top"
+"0","                           fill = NA)) %>% "
+"0","  select(date, Tests_day, Pos_day, pos_test_per, mov_av) %>% "
+"0","  filter(date >= today() - days(27))"
+"0","mv"

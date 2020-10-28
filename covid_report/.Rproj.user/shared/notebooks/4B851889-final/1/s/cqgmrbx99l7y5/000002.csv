@@ -1,0 +1,5 @@
+"0","```r
+par(mar = c(0, 0, 0, 0))
+maps::map(\"world\", lwd = .25)
+with(geocoded, points(lng, lat, pch = 20, cex = .50, col = rgb(0, .3, .7, .75)))
+```"

@@ -1,0 +1,4 @@
+"0","```r
+# Open COVID-19 tweets in CSV file. 
+covid_tweets <- read.csv(\"data/data_raw/covid_tweets.csv\", stringsAsFactors = FALSE)
+```"

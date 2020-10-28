@@ -1,0 +1,13 @@
+"0","```r
+# create factor variable to sort by frequency
+covid_desc$word <- factor(covid_desc$word, 
+                          levels = covid_desc$word[order(covid_desc$n,decreasing = TRUE)])
+
+ggplot(covid_20, aes(x = reorder(word, -n), y = n, fill = word))+
+  geom_bar(stat = \"identity\")+
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  ylab(\"Number of Times Word Appears in Covid-19 related tweets\")+
+  xlab(\"\")+
+  guides(fill = FALSE)
+```"

@@ -1,0 +1,4 @@
+"0","```r
+# Open RDS file. 
+overall_nrc <- read_rds(\"data/data_out/overall_nrc.rds\")
+```"

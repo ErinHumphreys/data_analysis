@@ -1,0 +1,8 @@
+"0","```r
+age_deaths_data <- html_node(nicd_page, xpath='//*[@id=\"main\"]/div/div/div/section[2]/div/div/div[1]/div/div/div[3]/div/table[5]')
+age_deaths_data
+```"
+"1","{html_node}
+<table>
+[1] <tbody>\n<tr>\n<td width=\"200\">Â <p><strong>Age</strong></p>\n</td>\n<td width=\"200\">Â <p><strong>Deat ...
+"

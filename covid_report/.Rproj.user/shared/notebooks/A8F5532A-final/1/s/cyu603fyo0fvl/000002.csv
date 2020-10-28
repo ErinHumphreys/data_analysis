@@ -1,0 +1,2 @@
+"0","# Open RDS file. "
+"0","covid_desc <- read_rds(""data/data_out/covid_desc.rds"")"

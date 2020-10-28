@@ -1,0 +1,109 @@
+---
+title: "Death by Province"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(readr)
+library(utils)
+library(rvest)
+library(ggplot2)
+library(lubridate)
+
+```
+
+##Death by Province
+```{r}
+death_pro <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_deaths.csv", na.strings = "", fileEncoding = "UTF-8-BOM")
+
+death_pro
+```
+
+```{r}
+clean_d <- death_pro %>%
+  mutate(date = as.Date(date,format = "%d-%m-%y")) %>% 
+  pivot_longer(c(`EC`,`FS`,`GP`,`KZN`, `LP`, `MP`, `NC`, `NW`, `WC`), 
+               names_to = "Province", 
+               values_to = "Deaths") %>% 
+  select(date, Province, Deaths) %>% 
+  filter(date ==max(date)) %>% 
+  mutate(Province = factor(Province, levels = c("WC","EC","KZN","GP","FS","LP","MP","NC","NW"))) %>% 
+  arrange(Province)
+clean_d
+```
+
+##Death by Province per 100,000
+<!-- INCOMPLETE -->
+```{r}
+pro_pop <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/district_data/za_province_pop.csv", fileEncoding = "UTF-8-BOM") 
+pro_pop
+```
+```{r}
+new <- data.frame(
+  Province = c("GP", "KZN", "WC", "EC", "LP", "MP", "NW", "FS", "NC"),
+  Pro_Population = as.integer(c(15176115,11289086,6844272,6712276,5982584,4592187,4072160,2887465,126875)))
+new
+```
+
+```{r}
+death_pop <- clean_d %>% 
+  inner_join(new, "Province")
+
+death_pop
+```
+
+```{r}
+final <- death_pop %>% 
+  mutate(Deaths_pop = Deaths/(Pro_Population/1000)*100) %>% 
+  arrange(desc(Deaths_pop)) %>% 
+  select(Province, Deaths_pop)
+
+final
+```
+
+```{r}
+final1 <- final %>% # for labelling purposes
+  mutate(Deaths_pop = format(round(Deaths_pop, 2), nsmall = 2),
+         Deaths_pop = as.numeric(Deaths_pop))
+final1
+```
+
+
+```{r}
+plot <- ggplot(data = final1,
+               mapping = aes(x = reorder(Province, -Deaths_pop),
+                             y = Deaths_pop)) +
+  geom_bar(stat = "identity",
+           width = 0.9,
+           fill = "#b54c49",
+           color = "#b54c49") +
+  geom_text(aes(label = Deaths_pop), 
+            colour = "white", 
+            position = position_dodge(width = 1.0), 
+            hjust = + 0.50, 
+            vjust = - 0.50) +
+  labs(x = NULL, 
+       y = NULL, 
+       title = "Deaths by Province (per 100k)",
+       caption = "Updated: 16 June 2020") +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_text(size = 11, color = "#969da1"),
+        axis.text.y = element_blank(),
+        plot.title = element_text(face = "bold", size = rel(1.5), hjust = 0.0, colour = "white"), 
+        plot.caption = element_text(size = 11, hjust = 0, color = "white"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+plot
+```
+
+
+
+
+

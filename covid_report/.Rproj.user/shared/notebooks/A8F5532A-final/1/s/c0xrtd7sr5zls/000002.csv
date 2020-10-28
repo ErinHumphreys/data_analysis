@@ -1,0 +1,2 @@
+"0","# Stemming: Replace words with its most basic conjugate form."
+"0","covid_corpus  <- tm_map(covid_corpus, content_transformer(stemDocument), language = ""english"")"

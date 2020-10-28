@@ -1,0 +1,4 @@
+"0","```r
+# Open RDS file. 
+covid_contribution <- read_rds(\"data/data_out/covid_contribution.rds\")
+```"

@@ -1,0 +1,2 @@
+"0","saveRDS(mv, ""data/data_out/13_daily_tests_and_positive_cases.rds"")"
+"0","write.csv(mv, ""data/data_out/13_daily_tests_and_positive_cases.csv"")"

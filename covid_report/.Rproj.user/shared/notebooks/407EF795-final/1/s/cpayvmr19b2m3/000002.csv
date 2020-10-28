@@ -1,0 +1,12 @@
+"0","```r
+# Removing stop words and more meaningless words.
+data(\"stop_words\")
+tidy_covid<-tidy_covid %>%
+  anti_join(stop_words) %>% 
+  filter(!(word == \"https\"|
+           word == \"rt\" |
+           word == \"t.co\" |
+           word == \"amp\" |
+           word == \" ' \" ))
+head(tidy_covid)
+```"

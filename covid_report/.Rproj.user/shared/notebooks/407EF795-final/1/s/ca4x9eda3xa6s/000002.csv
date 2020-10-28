@@ -1,0 +1,4 @@
+"0","```r
+# Save as RDS file. 
+write_rds(covid_nrc_day, \"data/data_out/covid_nrc_day.rds\")
+```"

@@ -1,0 +1,6 @@
+"0","out <- prepDocuments(processed$documents , processed$vocab, processed$meta)"
+"1","Removing 24908 of 32421 terms (24908 of 170558 tokens) due to frequency 
+"
+"1","Removing 2302 Documents with No Words 
+"
+"1","Your corpus now has 13022 documents, 7513 terms and 145650 tokens."

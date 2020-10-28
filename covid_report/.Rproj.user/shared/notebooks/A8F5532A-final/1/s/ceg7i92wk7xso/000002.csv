@@ -1,0 +1,3 @@
+"0","covid_tweets <- news_media %>%"
+"0","    filter(str_detect(text, covid_dictionary))"
+"0","head(covid_tweets)"

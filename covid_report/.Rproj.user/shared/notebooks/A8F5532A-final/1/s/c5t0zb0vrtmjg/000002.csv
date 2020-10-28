@@ -1,0 +1,5 @@
+"0","findingk <- searchK(out$documents, "
+"0","                    out$vocab, "
+"0","                    K = c(10:30),"
+"0","                    data = meta, "
+"0","                    verbose=FALSE)"

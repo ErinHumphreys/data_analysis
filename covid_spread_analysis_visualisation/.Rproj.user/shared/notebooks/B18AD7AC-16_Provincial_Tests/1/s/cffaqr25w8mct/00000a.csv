@@ -1,0 +1,3 @@
+"0","new1 <- new %>% "
+"0","  mutate(Test1 = format(Test, big.mark = "","")) # insert comma for thousands"
+"0","new1"

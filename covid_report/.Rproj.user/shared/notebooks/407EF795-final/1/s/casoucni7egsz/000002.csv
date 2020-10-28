@@ -1,0 +1,5 @@
+"0","```r
+covid_topic_model <- LDA(tidy_covid_DTM, 
+                    k = 6, 
+                    control = list(seed = 321))
+```"

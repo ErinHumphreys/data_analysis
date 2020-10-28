@@ -1,0 +1,26 @@
+{
+    "id": "A24F0DDB",
+    "path": "~/r_projects/r_assignment/final/05_Deaths_By_Age.Rmd",
+    "project_path": "05_Deaths_By_Age.Rmd",
+    "type": "r_markdown",
+    "hash": "618542780",
+    "contents": "",
+    "dirty": false,
+    "created": 1592330509958.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "chunk_output_type": "inline",
+        "cursorPosition": "39,23",
+        "scrollLine": "33",
+        "last_setup_crc32": "F7DEE3C627a3befc"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1592330661,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592330661147,
+    "read_only": false,
+    "read_only_alternatives": []
+}

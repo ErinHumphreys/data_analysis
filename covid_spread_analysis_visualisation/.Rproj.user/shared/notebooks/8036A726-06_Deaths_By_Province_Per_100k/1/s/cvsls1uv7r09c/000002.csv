@@ -1,0 +1,4 @@
+"0","death_pop <- clean_d %>% "
+"0","  inner_join(new, ""Province"")"
+"2","Column `Province` joining factors with different levels, coercing to character vector"
+"0","death_pop"

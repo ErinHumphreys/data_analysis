@@ -1,0 +1,4 @@
+"0","clean <- pro_test %>% "
+"0","  mutate(date = as.Date(date,format = ""%d-%m-%y"")) %>% "
+"0","  pivot_longer(c(""EC"",""FS"",""GP"",""KZN"",""LP"",""MP"",""NC"",""NW"",""WC""), names_to = ""Province"", values_to = ""Test"")"
+"0","clean"

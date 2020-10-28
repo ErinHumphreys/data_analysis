@@ -1,0 +1,23 @@
+{
+    "id": "2D6D30FF",
+    "path": "~/r_projects/r_assignment/final/21_Daily_Infection_Increases_From_First_100_Africa.Rmd",
+    "project_path": "21_Daily_Infection_Increases_From_First_100_Africa.Rmd",
+    "type": "r_markdown",
+    "hash": "1753348688",
+    "contents": "",
+    "dirty": false,
+    "created": 1592323157081.0,
+    "source_on_save": false,
+    "relative_order": 10,
+    "properties": {
+        "chunk_output_type": "inline"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1592317101,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592317101,
+    "read_only": false,
+    "read_only_alternatives": []
+}

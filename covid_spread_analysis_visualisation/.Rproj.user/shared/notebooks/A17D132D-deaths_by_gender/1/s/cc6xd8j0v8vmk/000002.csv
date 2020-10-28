@@ -1,0 +1,2 @@
+"0","gender_deaths_table <- html_table(gender_deaths_data, fill = TRUE, header = TRUE)"
+"0","gender_deaths_table"

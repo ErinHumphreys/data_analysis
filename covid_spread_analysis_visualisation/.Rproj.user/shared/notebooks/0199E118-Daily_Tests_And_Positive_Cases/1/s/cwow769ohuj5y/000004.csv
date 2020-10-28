@@ -1,0 +1,7 @@
+"0","new2 <- new %>% "
+"0","   mutate(date = as.Date(date,format = ""%d-%m-%y""),"
+"0","          pos_test_per = (Pos_day/Tests_day)*100) %>% "
+"0","   select(date,Tests_day,Pos_day, pos_test_per) #%>% "
+"0","  # filter(date >= today()-days(37))"
+"0",""
+"0","new2"

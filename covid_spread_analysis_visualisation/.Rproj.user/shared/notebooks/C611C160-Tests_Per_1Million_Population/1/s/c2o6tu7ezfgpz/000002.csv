@@ -1,0 +1,6 @@
+"0","tests1 <- tests %>% 
+  mutate(pop = as.integer(tests_per_pop_1mil)) %>% # have a separate column for the test per pop per 1mil
+  unite(\"final\", tests_per_pop_1mil_1, tests_per_pop_1mil_perc, sep = \" (\") %>% # add the first bracket to the column
+  mutate(unit = \")\") %>% # add the closing bracket to the column
+  unite(\"final1\", final, unit, sep = \"%\") # get the final column for the headings
+tests1"

@@ -1,0 +1,25 @@
+{
+    "id": "8EA65583",
+    "path": "~/r_projects/r_assignment/final/13_Confirmed_Infections_(Last_20_Days).Rmd",
+    "project_path": "13_Confirmed_Infections_(Last_20_Days).Rmd",
+    "type": "r_markdown",
+    "hash": "3324791851",
+    "contents": "",
+    "dirty": false,
+    "created": 1592322714264.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "chunk_output_type": "inline",
+        "cursorPosition": "2,21",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1592322749,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592322749,
+    "read_only": false,
+    "read_only_alternatives": []
+}

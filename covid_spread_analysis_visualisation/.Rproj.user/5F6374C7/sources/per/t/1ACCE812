@@ -1,0 +1,27 @@
+{
+    "id": "1ACCE812",
+    "path": "~/r_projects/r_assignment/final/Provincial_Tests.Rmd",
+    "project_path": "Provincial_Tests.Rmd",
+    "type": "r_markdown",
+    "hash": "2861584161",
+    "contents": "",
+    "dirty": false,
+    "created": 1592313228155.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "tempName": "Untitled1",
+        "chunk_output_type": "inline",
+        "cursorPosition": "83,3",
+        "scrollLine": "40",
+        "last_setup_crc32": "D68DB24A9eb8d367"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1592313490,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592313490732,
+    "read_only": false,
+    "read_only_alternatives": []
+}

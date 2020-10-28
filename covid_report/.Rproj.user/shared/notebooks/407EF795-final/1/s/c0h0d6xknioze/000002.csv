@@ -1,0 +1,4 @@
+"0","```r
+# Punctuation: Remove all punctuation marks. This is generally considered important, since to an algorithm the punctuation mark â€œ,â€ will assume a unique numeric identity. 
+covid_corpus <- tm_map(covid_corpus, content_transformer(removePunctuation))
+```"

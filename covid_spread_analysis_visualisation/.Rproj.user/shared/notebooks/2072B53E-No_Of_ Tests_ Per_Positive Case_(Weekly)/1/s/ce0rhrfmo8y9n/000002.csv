@@ -1,0 +1,5 @@
+"0","new_media3 <- media %>% "
+"0","  mutate(weeks = week_label) %>% "
+"0","  select(weeks,weekly_cases,tests_per_case) %>% "
+"0","  filter(!is.na(tests_per_case)) "
+"0","new_media3"

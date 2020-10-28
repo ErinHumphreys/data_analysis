@@ -1,0 +1,11 @@
+"0","```r
+# Load data 
+tidy_covid_DTM <- read_rds(\"data/data_out/tidy_covid_DTM.rds\")
+tidy_covid_DTM
+```"
+"1","<<DocumentTermMatrix (documents: 503, terms: 2522)>>
+Non-/sparse entries: 6225/1262341
+Sparsity           : 100%
+Maximal term length: 23
+Weighting          : term frequency (tf)
+"

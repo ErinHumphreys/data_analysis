@@ -1,0 +1,5 @@
+"0","covid3 <- covid2 %>% "
+"0","  filter(deaths >= 1) %>% "
+"0","  mutate(case_fatality_rate = deaths / cases * 100) %>% "
+"0","  select(date, deaths, case_fatality_rate)"
+"0","covid3"

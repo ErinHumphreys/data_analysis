@@ -1,0 +1,27 @@
+{
+    "id": "83F759E3",
+    "path": "~/r_projects/r_assignment/final/Average_Daily_Tests_Per_Week.Rmd",
+    "project_path": "Average_Daily_Tests_Per_Week.Rmd",
+    "type": "r_markdown",
+    "hash": "2312889069",
+    "contents": "",
+    "dirty": false,
+    "created": 1592310422415.0,
+    "source_on_save": false,
+    "relative_order": 6,
+    "properties": {
+        "tempName": "Untitled1",
+        "chunk_output_type": "inline",
+        "cursorPosition": "30,49",
+        "scrollLine": "28",
+        "last_setup_crc32": "D68DB24Af8f004c2"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1592310747,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592310747098,
+    "read_only": false,
+    "read_only_alternatives": []
+}

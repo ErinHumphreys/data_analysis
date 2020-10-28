@@ -1,0 +1,11 @@
+"0","```r
+tests <- covid %>% 
+  mutate(pop_per_mil = population / 1000000,
+         tests_per_pop_1mil = total_tests / pop_per_mil,
+         tests_per_pop_1mil_perc = tests_per_pop_1mil / 1000000 * 100) %>% 
+  select(country, tests_per_pop_1mil, tests_per_pop_1mil_perc) %>% 
+  mutate(tests_per_pop_1mil = format(round(tests_per_pop_1mil, 0), nsmall = 0),
+         tests_per_pop_1mil_perc = format(round(tests_per_pop_1mil_perc, 2), nsmall = 2)) %>% 
+  select(country, tests_per_pop_1mil, tests_per_pop_1mil_perc)
+tests
+```"

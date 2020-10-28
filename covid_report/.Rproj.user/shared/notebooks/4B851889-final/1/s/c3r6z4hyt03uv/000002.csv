@@ -1,0 +1,7 @@
+"0","covid_nrc_day <-"
+"0","  tidy_covid %>%"
+"0","  inner_join(get_sentiments(""nrc"")) %>% "
+"0","  count(date,sentiment) #%>%"
+"2","Error: The textdata package is required to download the NRC word-emotion association lexicon.
+Install the textdata package to access this dataset.
+"

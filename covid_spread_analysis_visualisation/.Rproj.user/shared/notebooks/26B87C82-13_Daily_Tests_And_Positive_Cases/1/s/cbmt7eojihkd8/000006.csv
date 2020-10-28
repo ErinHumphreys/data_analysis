@@ -1,0 +1,5 @@
+"0","test_num <- test_data %>% "
+"0","  mutate(date = as.Date(date,format = ""%d-%m-%y"")) %>% "
+"0","  mutate(Tests_day = cumulative_tests - lag(cumulative_tests)) %>% "
+"0","  select(date, Tests_day) # use coalesce to remove NA's"
+"0","test_num"

@@ -1,0 +1,4 @@
+"0","```r
+g1 <- ggplot_gtable(ggplot_build(plot1))
+g2 <- ggplot_gtable(ggplot_build(plot2))
+```"

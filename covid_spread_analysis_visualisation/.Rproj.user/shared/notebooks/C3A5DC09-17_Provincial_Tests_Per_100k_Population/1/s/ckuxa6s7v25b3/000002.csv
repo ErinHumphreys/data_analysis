@@ -1,0 +1,2 @@
+"0","saveRDS(final1, ""data/data_out/17_provincial_tests_per_100k_population.rds"")"
+"0","write.csv(final1, ""data/data_out/17_provincial_tests_per_100k_population.csv"")"

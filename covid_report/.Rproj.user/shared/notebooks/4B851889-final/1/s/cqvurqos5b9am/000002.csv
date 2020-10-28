@@ -1,0 +1,18 @@
+"0","```r
+# View the first five rows of the DTM and two of its columns. 
+inspect(covid_DTM[1:5,3:8])
+```"
+"1","<<DocumentTermMatrix (documents: 5, terms: 6)>>
+Non-/sparse entries: 6/24
+Sparsity           : 80%
+Maximal term length: 17
+Weighting          : term frequency (tf)
+Sample             :
+    Terms
+Docs healthcom httpstcobutafxng httpstconmqzkkbdf matern pregnanc transmiss
+   1         1                1                 1      1        1         1
+   2         0                0                 0      0        0         0
+   3         0                0                 0      0        0         0
+   4         0                0                 0      0        0         0
+   5         0                0                 0      0        0         0
+"

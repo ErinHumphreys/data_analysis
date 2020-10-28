@@ -1,0 +1,2 @@
+"0","saveRDS(final, ""data/data_out/07_deaths_by_age_per_100k.rds"")"
+"0","write.csv(final, ""data/data_out/07_deaths_by_age_per_100k.csv"")"

@@ -1,0 +1,6 @@
+"0","final <- death_pop %>% "
+"0","  mutate(Deaths_pop = Deaths/(Pro_Population/1000)*100) %>% "
+"0","  arrange(desc(Deaths_pop)) %>% "
+"0","  select(Province, Deaths_pop)"
+"0",""
+"0","final"

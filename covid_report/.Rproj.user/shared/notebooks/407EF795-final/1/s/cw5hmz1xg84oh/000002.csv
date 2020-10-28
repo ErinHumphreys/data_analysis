@@ -1,0 +1,7 @@
+"0","```r
+# Most common Positive and Negative words for Media tweets
+common <-  tidy_less %>%
+  inner_join(get_sentiments(\"bing\")) %>% 
+  count(word,sentiment)
+head(common)
+```"

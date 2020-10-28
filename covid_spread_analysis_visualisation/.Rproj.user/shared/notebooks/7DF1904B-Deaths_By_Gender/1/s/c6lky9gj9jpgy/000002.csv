@@ -1,0 +1,5 @@
+"0","```r
+gender_deaths_plot <- gender_deaths_plot %>% # taking table4a dataset AND THEN piping it to \"pivot_longer\"
+  pivot_longer(c('male', 'female', 'unk'), names_to = \"gender\", values_to = \"deaths\")
+gender_deaths_plot
+```"

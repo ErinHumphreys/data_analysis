@@ -1,0 +1,4 @@
+"0","```r
+covid_20<-covid_desc[1:20,]
+covid_20
+```"

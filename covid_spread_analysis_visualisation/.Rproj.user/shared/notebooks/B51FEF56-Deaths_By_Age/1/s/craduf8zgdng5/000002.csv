@@ -1,0 +1,5 @@
+"0","```r
+new_age <- age_deaths %>%
+  select(Age, Deaths)
+new_age
+```"

@@ -1,0 +1,7 @@
+"0","```r
+findThoughts(Second_STM, 
+             texts = topics_covid$documents,
+             n = 2, 
+             topics = 3)
+
+```"

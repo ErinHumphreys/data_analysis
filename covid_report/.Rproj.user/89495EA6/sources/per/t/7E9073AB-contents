@@ -1,0 +1,195 @@
+---
+title: "Clean data for sentiment analysis"
+output: html_notebook
+---
+
+```{r}
+library(rtweet)
+library(tidyverse)
+library(tidytext)
+library(stringr)
+library(textdata)
+library(tidyr)
+```
+
+
+## Import Media timelines
+```{r}
+tweets <- read.csv("data_raw/media_timelines.csv", stringsAsFactors = FALSE)
+tweets
+```
+## Tidying of data
+### Tokenising 15000 tweets from media agencies
+```{r}
+tidy_tweets<- tweets %>%
+  select(created_at, screen_name,text,favorite_count,retweet_count) %>%
+  unnest_tokens("word", text)
+tidy_tweets
+```
+
+##Removing stop words and extra meaningless words
+```{r}
+data("stop_words")
+tidy_less<-tidy_tweets %>%
+  anti_join(stop_words) %>% 
+  filter(!(word == "https"|
+           word == "rt" |
+           word == "t.co" |
+           word == "amp"))
+tidy_less
+```
+
+
+```{r}
+#### Separate date and time
+tidy_less <- tidy_less %>% 
+  separate(created_at, into = c("date", "time"), sep = "\\s", extra = "merge") %>% 
+  mutate(date = as.Date(date,"%Y-%m-%d"))
+tidy_less
+
+write.csv("data_out/media_tweets_tidy")
+```
+
+
+
+<!-- The nrc lexicon categorizes words in a binary fashion (“yes”/“no”) into categories of positive, negative, anger, anticipation, disgust, fear, joy, sadness, surprise, and trust. 
+
+The bing lexicon categorizes words in a binary fashion into positive and negative categories. 
+
+The AFINN lexicon assigns words with a score that runs between -5 and 5, with negative scores indicating negative sentiment and positive scores indicating positive sentiment. -->
+
+### Sentiment Analysis
+
+### Frequency of Positive vs. Negative words in Media Tweets Plot
+<!-- negative and positive on one plot -->
+```{r}
+overall_sentiment <-
+  tidy_less %>%
+  inner_join(get_sentiments("bing")) %>% 
+  count(date, sentiment) %>% 
+  spread(sentiment,n, fill = 0) 
+overall_sentiment
+```
+<!-- positive and negative on one plot -->
+```{r}
+overall_sentiment_plot <- 
+  ggplot(overall_sentiment, aes(x = date)) +
+  geom_line(aes(y= negative),color="blue") +
+  geom_line(aes(y = positive), color = "red") +
+  theme_minimal()+
+  ylab("Frequency of Positve vs. Negative Words in Media Tweets")+
+  xlab("Date")#+
+#  scale_color_manual("", breaks = c("Negative", "Positive"),
+#                     values = c("blue","red"))
+overall_sentiment_plot
+```
+#### From the plot shown above, there is an increasing trend across both the Positive(red) and Negative(blue) words present in the media twitter posts that span 6 media agencies collectively. This trend suggests that the amount of posistive and negative words present in each tweet per day has gradually increased.The amount of negative words has remained above the amount of positive words per day. The negative words out weighs the positive words, especially after June as the amount of negative words peaked. After this peak, a fall in negative words came about but picked up again. Thereafter the amount of negative words remained in the 200 to 300 words range. With regards to the posistive words per day, the trend can be described as gradual and slightly flat as the posts after June had stayed in the same range. 
+
+##### can go on to discuss the lockdown, restrictions, economy, governmental decision making and recent events that could have influenced the spike in number of negative words from June on wards.
+
+<!-- FAUWAAZ ADD THIS -->
+### Visualise emotions of the media tweets
+```{r}
+overall_nrc <-
+  tidy_less %>%
+  inner_join(get_sentiments("nrc")) %>% 
+  count(sentiment) %>%
+  group_by(sentiment)
+  #spread(sentiment,n, fill = 0) 
+overall_nrc
+```
+```{r}
+ggplot(overall_nrc, aes(x=reorder(sentiment, -n), y=n, fill=sentiment))+
+  geom_bar(stat="identity")+
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  ylab("Number of Times emotion appears in overall Media ")+
+  xlab("")+
+  guides(fill=FALSE)
+```
+### With the use of the NRC lexicon, the resulting sentiments are different form using the BING lexicon. In this case positive words posted by media agencies have appeared the most.This can be deduced from the fact that teh NRC lexicon has more positive word associations than in the BING lexicon, but the BING lexicon has more negative word associations than the NRC lexicon.
+
+### Sentiment over time per agency
+```{r}
+media_nrc_day <-
+  tidy_less %>%
+  inner_join(get_sentiments("nrc")) %>% 
+  count(date,sentiment) #%>%
+  #group_by(sentiment)
+  #spread(sentiment,n, fill = 0) 
+media_nrc_day
+```
+
+```{r}
+ggplot(media_nrc_day, aes(x=date,y = n))+
+  geom_line(aes(fill = sentiment))+
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  ylab("Number of Times sentiment appears in Covid-19 related tweets")+
+  xlab("")+
+  guides(fill=FALSE)+
+  facet_wrap(~sentiment)
+```
+### Plots illustrate a good distribution of sentiments. All sentiments have and upward trend, suggesting an increase of of use. Sentiments such as Negative,positive and trust display the most upward trend. Also having the most number of appearances. 
+
+<!-- STOP HERE -->
+
+
+## Most common Positive and Negative words for Media tweets
+```{r}
+common <-  tidy_less %>%
+  inner_join(get_sentiments("bing")) %>% 
+  count(word,sentiment)
+common
+  
+```
+### Top 20 most common Positive and Negative words for the media tweets
+```{r}
+common %>%
+  group_by(sentiment) %>%
+  top_n(20) %>%
+  ungroup() %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(word, n, fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~sentiment, scales = "free_y") +
+  labs(y = "Contribution to sentiment",
+       x = NULL) +
+  coord_flip()
+```
+#### The above illustrates the top 20 positive and negative words that contributed to the sentiment of the general tweets tweeted by the media agencies.
+
+
+
+## Top 20 most frequently posted words
+```{r}
+media_desc <- tidy_less %>%
+        count(word) %>%
+        arrange(desc(n)) 
+media_desc
+```
+
+
+```{r, message=FALSE, warnings=FALSE}
+#select only top words
+media_20<-media_desc[1:20,]
+media_20
+```
+
+#### Top 20 words plot
+```{r}
+#create factor variable to sort by frequency
+media_desc$word <- factor(media_desc$word, levels = media_desc$word[order(media_desc$n,decreasing=TRUE)])
+
+
+ggplot(media_20, aes(x=reorder(word, -n), y=n, fill=word))+
+  geom_bar(stat="identity")+
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  ylab("Number of Times Word Appears in Covid-19 related tweets")+
+  xlab("")+
+  guides(fill=TRUE)
+```
+#### The most frequently tweeted word for the general media twwets is "covid" and "19". One can asssume that the most tweeted word by the media agencies would be "covid-19".
+
+

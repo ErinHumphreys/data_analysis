@@ -1,0 +1,4 @@
+"0","```r
+topics_covid <- read.csv(\"data/data_raw/covid_tweets.csv\", stringsAsFactors = FALSE)
+head(topics_covid)
+```"

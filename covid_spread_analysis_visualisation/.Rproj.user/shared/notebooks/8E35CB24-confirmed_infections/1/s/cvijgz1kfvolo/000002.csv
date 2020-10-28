@@ -1,0 +1,5 @@
+"0","new3 <- covid_join %>% "
+"0","  mutate(infections_100 = round((confirmed_cases/population)*100000, digits = 2)) %>% "
+"0","  select(date, province, confirmed_cases, population, infections_100)%>% "
+"0","  arrange(desc(infections_100)) "
+"0","new3"

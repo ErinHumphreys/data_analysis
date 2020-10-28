@@ -1,0 +1,9 @@
+"0","```r
+covid <- data %>% 
+  mutate(country = location,
+         infections = total_cases,
+         date = ymd(date)) %>% 
+  filter(total_cases >= 100, country == \"South Africa\" | country == \"Egypt\" | country == \"Nigeria\" | country == \"Algeria\" | country == \"Morocco\") %>% 
+  select(date, country, infections)
+covid
+```"

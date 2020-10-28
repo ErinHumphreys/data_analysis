@@ -1,0 +1,133 @@
+---
+title: "Positivity Rate: Number of Tests vs Positive Cases (%)"
+output: html_notebook
+---
+
+```{r Setup, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(readr)
+library(utils)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(zoo)
+library(formattable)
+```
+
+#Read raw data for number of tests 
+```{r}
+test_data <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_timeline_testing.csv", na.strings = "", fileEncoding = "UTF-8-BOM")
+test_data
+```
+
+#Write raw data for number of tests
+```{r}
+write.csv(test_data, "data/data_raw/raw_15_positivity_rate_number_of_tests_vs_positive_cases_perc/raw_covid19za_test_data.csv")
+```
+
+#Clean data
+```{r}
+test_num <- test_data %>% 
+  mutate(date = as.Date(date,format = "%d-%m-%y")) %>% 
+  mutate(Tests_day = cumulative_tests - lag(cumulative_tests)) %>% 
+  select(date, Tests_day) # have to use coalesce to remove NA's
+test_num
+```
+
+#Read raw positive tests data
+```{r}
+data <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_confirmed.csv",na.strings = "", fileEncoding = "UTF-8-BOM", stringsAsFactors = TRUE)
+data
+```
+
+
+#Write raw data for positive tests
+```{r}
+write.csv(data, "data/data_raw/raw_15_positivity_rate_number_of_tests_vs_positive_cases_perc/raw_covid19za__positive_test_data.csv")
+```
+
+#Calculate positive tests per day
+```{r}
+pos_test <- data %>% 
+  mutate(date = as.Date(date,format = "%d-%m-%y"),
+         Pos_day = total - lag(total)) %>% 
+  select(date, Pos_day) # have to use coalesce to remove NA's
+pos_test
+```
+
+#Join dataframes
+```{r}
+new <- pos_test %>% 
+  left_join(test_num, "date")
+new
+```
+
+#Convert dates to date format
+```{r}
+new2 <- new %>% 
+   mutate(date = as.Date(date,format = "%d-%m-%y"),
+          pos_test_per = (Pos_day/Tests_day)*100) %>% 
+   select(date,Tests_day,Pos_day, pos_test_per)
+new2
+```
+
+#Calculate moving average 
+```{r}
+mv <- new2 %>% 
+  mutate(mov_av = rollmean(x = pos_test_per, # column to take
+                           k = 7, # rolling time period
+                           align = "right", #leave values above the top
+                           fill = NA)) %>% 
+  select(date, Tests_day, Pos_day, pos_test_per, mov_av) %>% 
+  filter(date >= today() - days(27))
+mv
+```
+
+#Write to data_out folder
+```{r}
+saveRDS(mv, "data/data_out/15_positivity_rate_number_of_tests_vs_positive_cases_perc.rds")
+write.csv(mv, "data/data_out/15_positivity_rate_number_of_tests_vs_positive_cases_perc.csv")
+```
+
+#Plot
+```{r}
+mv_plot <- ggplot() +
+  geom_line(data = mv,
+            aes(x = date,
+                y = pos_test_per), 
+            color = "red")+
+  geom_line(data = mv, 
+            aes(x = date,
+                y = mov_av), 
+            color = "grey",
+            linetype = "twodash") +
+  geom_bar(data = mv, 
+           aes(x = date,
+               y = Tests_day),
+           stat = "identity",
+           width = 0.7,
+           color = "#3080c2",
+           fill = "#3080c2") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1),
+                     sec.axis = sec_axis(~., name = NULL))+
+  scale_x_date(date_labels = "%d/%m",date_breaks = "1 day") +
+  labs(x = NULL,
+       y = NULL,
+       title = "Positivity Rate: Number of Tests vs Positive Cases (%)",
+       caption = "Updated: 16 June 2020") +
+  theme_minimal() + 
+  theme(panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_text(size = 8, color = "#969da1"),
+        axis.text.y = element_text(size = 8, color = "#969da1"),
+        panel.grid.major.y = element_line(linetype = "dotted",color = "lightblue"),
+        plot.title = element_text(face = "bold", size = rel(1.5), hjust = 0.0, colour = "white"), 
+        plot.caption = element_text(size = 11, hjust = 0, color = "white"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+mv_plot
+```

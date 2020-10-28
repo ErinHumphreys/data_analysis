@@ -1,0 +1,2 @@
+"0","# save COVID-19 tweets in CSV file. "
+"0","save_as_csv(covid_tweets, ""data/data_raw/covid_tweets.csv"")"

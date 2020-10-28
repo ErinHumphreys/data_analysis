@@ -1,0 +1,2 @@
+"0","age_deaths <- read.csv(""data/data_raw/raw_05_deaths_by_age.csv"", stringsAsFactors = F)"
+"0","age_deaths"

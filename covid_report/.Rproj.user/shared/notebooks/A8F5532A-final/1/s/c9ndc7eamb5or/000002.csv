@@ -1,0 +1,9 @@
+"0","# Creating a Corpus"
+"0","covid_corpus <- Corpus(VectorSource(as.vector(covid_tweets$text))) "
+"0","covid_corpus"
+"1","<<SimpleCorpus>>
+"
+"1","Metadata:  corpus specific: 1, document level (indexed): 0
+"
+"1","Content:  documents: 503
+"

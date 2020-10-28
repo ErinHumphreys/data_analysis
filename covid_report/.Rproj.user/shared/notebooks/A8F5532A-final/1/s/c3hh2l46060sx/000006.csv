@@ -1,0 +1,13 @@
+"0","# set a seed so that the output of the model is predictable"
+"0","tidy_covid_DTM_lda <- LDA(tidy_covid_DTM, k = 2, control = list(seed = 1234))"
+"0","tidy_covid_DTM_lda"
+"1","A"
+"1"," "
+"1","LDA_VEM"
+"1"," "
+"1","topic model with"
+"1"," "
+"1","2"
+"1"," "
+"1","topics.
+"

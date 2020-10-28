@@ -1,0 +1,3 @@
+"0","active_cases <- confirmed_cases %>% "
+"0","  left_join(recoveries, by = c(""date"" = ""date""))"
+"0","active_cases"

@@ -1,0 +1,4 @@
+"0","```r
+# Open RDS file. 
+Second_STM <- read_rds(\"data/data_out/Second_STM.rds\")
+```"

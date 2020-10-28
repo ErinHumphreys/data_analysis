@@ -1,0 +1,9 @@
+"0","```r
+library(textdata)
+overall_nrc <-
+  tidy_less %>%
+  inner_join(get_sentiments(\"nrc\")) %>% 
+  count(sentiment) %>%
+  group_by(sentiment)
+head(overall_nrc)
+```"

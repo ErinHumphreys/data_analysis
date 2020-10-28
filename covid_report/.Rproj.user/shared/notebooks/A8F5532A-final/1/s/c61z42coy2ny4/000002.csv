@@ -1,0 +1,2 @@
+"0","# Removing Whitespaces:"
+"0","covid_corpus <- tm_map(covid_corpus, content_transformer(stripWhitespace))"

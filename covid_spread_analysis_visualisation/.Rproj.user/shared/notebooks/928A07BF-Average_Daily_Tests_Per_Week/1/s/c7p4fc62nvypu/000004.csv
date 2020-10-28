@@ -1,0 +1,2 @@
+"0","media <- read.csv(""data/case_media.csv"", na.strings = """", fill = TRUE, header = TRUE, stringsAsFactors = TRUE)"
+"0","head(media)"

@@ -1,0 +1,7 @@
+"0","```r
+# Tidy-Text
+tidy_covid_tweets <- covid_tweets %>%
+    select(created_at,text) %>%
+    unnest_tokens(\"word\", text)
+head(tidy_covid_tweets)
+```"

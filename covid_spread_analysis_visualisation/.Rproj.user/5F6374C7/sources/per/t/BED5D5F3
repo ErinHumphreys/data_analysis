@@ -1,0 +1,25 @@
+{
+    "id": "BED5D5F3",
+    "path": "~/r_projects/r_assignment/final/20_Tests_Per_1Million_Population.Rmd",
+    "project_path": "20_Tests_Per_1Million_Population.Rmd",
+    "type": "r_markdown",
+    "hash": "1635683342",
+    "contents": "",
+    "dirty": false,
+    "created": 1592323094261.0,
+    "source_on_save": false,
+    "relative_order": 8,
+    "properties": {
+        "chunk_output_type": "inline",
+        "cursorPosition": "1,38",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1592323109,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592323109,
+    "read_only": false,
+    "read_only_alternatives": []
+}

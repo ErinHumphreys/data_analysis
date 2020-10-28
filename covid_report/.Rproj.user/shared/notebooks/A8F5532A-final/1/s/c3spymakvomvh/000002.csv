@@ -1,0 +1,7 @@
+"0","ggplot(overall_nrc, aes(x = reorder(sentiment, -n), y = n, fill = sentiment))+"
+"0","  geom_bar(stat = ""identity"")+"
+"0","  theme_minimal()+"
+"0","  theme(axis.text.x = element_text(angle = 90, hjust = 1))+"
+"0","  ylab(""Number of Times emotion appears in overall Media"")+"
+"0","  xlab("""")+"
+"0","  guides(fill = FALSE)"

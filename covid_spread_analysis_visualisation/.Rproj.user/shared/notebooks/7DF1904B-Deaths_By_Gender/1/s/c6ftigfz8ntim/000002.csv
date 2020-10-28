@@ -1,0 +1,8 @@
+"0","```r
+gender_deaths <- gender_deaths %>%
+  mutate(Male = Male....,
+         Female = Female....,
+         total = Total..Unknown..2.) %>% 
+  select(Male, Female, total)
+gender_deaths
+```"

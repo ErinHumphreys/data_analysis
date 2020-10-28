@@ -1,0 +1,35 @@
+"0","```r
+pt_100k_plot <- ggplot(data = final1,
+                  mapping = aes(x = reorder(Province, Test_pop), 
+                                y = Test_pop)) +
+  geom_bar(stat = \"identity\",
+           width = 0.75,
+           fill = \"#b54c49\",
+           color = \"#b54c49\") +
+  geom_text(aes(label = Test_pop1), 
+            position = position_dodge(width = 0.9), 
+            color = \"white\",
+            hjust = -0.15,
+            vjust = 0.25)+
+  labs(x= NULL,
+       y = NULL,
+       title = \"Provincial Tests Per 100,000 Population\",
+       subtitle = \"This data is not regularly updated. This the most recent data available\",
+       caption = \"Updated: 16 June 2020\") + 
+  theme_minimal() + 
+  theme(panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 8, color = \"#969da1\", hjust = 1.0, vjust = 0),
+        plot.title = element_text(face = \"bold\", size = rel(1.5), hjust = -0.38, colour = \"white\"),
+        plot.subtitle = element_text(size = 11, color = \"#969da1\", hjust = -0.25),
+        plot.caption = element_text(size = 11, hjust = -0.18, face = \"bold\", color = \"white\"),
+        plot.background = element_rect(size = 1.5, fill = \"#142c44\", colour = \"#969da1\"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, \"cm\"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+        
+pt_100k_plot + coord_flip()
+```"

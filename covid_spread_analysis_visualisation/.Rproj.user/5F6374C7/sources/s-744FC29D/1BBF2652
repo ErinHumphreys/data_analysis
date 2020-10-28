@@ -1,0 +1,26 @@
+{
+    "id": "1BBF2652",
+    "path": "~/r_projects/r_assignment/final/17_Provincial_Tests_Per_100k_Population.Rmd",
+    "project_path": "17_Provincial_Tests_Per_100k_Population.Rmd",
+    "type": "r_markdown",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1592338673518.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "chunk_output_type": "inline",
+        "last_setup_crc32": "",
+        "cursorPosition": "70,3",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1592338998,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592338998173,
+    "read_only": false,
+    "read_only_alternatives": []
+}

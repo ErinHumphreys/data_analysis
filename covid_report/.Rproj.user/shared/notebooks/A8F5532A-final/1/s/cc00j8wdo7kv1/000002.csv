@@ -1,0 +1,3 @@
+"0","# Stem the tidytext object with the wordStem function [library(SnowballC)]. "
+"0","tidy_covid_tweets <- tidy_covid_tweets %>%"
+"0","  mutate_at(""word"", funs(wordStem((.), language=""en"")))"

@@ -1,0 +1,4 @@
+"0","covid_desc <- tidy_covid %>%"
+"0","        count(word) %>%"
+"0","        arrange(desc(n)) "
+"0","covid_desc"

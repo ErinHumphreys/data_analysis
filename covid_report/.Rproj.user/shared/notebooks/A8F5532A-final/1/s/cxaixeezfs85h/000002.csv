@@ -1,0 +1,4 @@
+"0","tidy_pol <- pol_tweets %>%"
+"0","  select(created_at, screen_name,text,favorite_count,retweet_count) %>%"
+"0","  unnest_tokens(""word"", text)"
+"0","head(tidy_pol)"

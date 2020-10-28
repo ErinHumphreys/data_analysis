@@ -1,0 +1,4 @@
+"0","```r
+covid_DTM_lda_topics <- tidy(tidy_covid_DTM_lda, matrix = \"beta\")
+head(covid_DTM_lda_topics)
+```"

@@ -1,0 +1,6 @@
+"0","deaths_data <- deaths_data %>%"
+"0","  mutate(date = dmy(date),"
+"0","         total_deaths = total) %>% "
+"0","  select(date, province, deaths) #%>% "
+"0","#  filter(date == max(date))"
+"0","deaths_data"

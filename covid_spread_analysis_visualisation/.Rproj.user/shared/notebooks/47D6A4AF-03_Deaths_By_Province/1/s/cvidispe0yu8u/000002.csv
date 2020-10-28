@@ -1,0 +1,9 @@
+"0","```r
+covid <- new %>% 
+  select(date, province, deaths) %>% 
+  mutate(date = dmy(date)) %>% 
+  filter(date == max(date)) %>% 
+  mutate(province = factor(province, levels = c(\"WC\",\"EC\", \"KZN\", \"GP\", \"FS\", \"LP\", \"NC\", \"NW\", \"MP\"))) %>% 
+  arrange(province)
+covid
+```"

@@ -1,0 +1,11 @@
+"0","```r
+# The below is an illustration of a Negative and Positive on one plot.
+overall_sentiment_plot <- 
+  ggplot(overall_sentiment, aes(x = date)) +
+  geom_line(aes(y = negative),color = \"blue\") +
+  geom_line(aes(y = positive), color = \"red\") +
+  theme_minimal()+
+  ylab(\"Frequency of Positive vs. Negative Words in Media Tweets\")+
+  xlab(\"Date\")
+overall_sentiment_plot
+```"

@@ -1,0 +1,6 @@
+"0","```r
+tests <- tests %>% 
+  mutate(tests_per_pop_1mil = as.integer(tests_per_pop_1mil),
+         tests_per_pop_1mil_1 = format(tests_per_pop_1mil, big.mark = \",\"))
+tests
+```"

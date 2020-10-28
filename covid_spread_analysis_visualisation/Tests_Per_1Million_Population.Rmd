@@ -1,0 +1,93 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r Setup, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(dplyr)
+library(utils)
+library(lubridate)
+```
+
+```{r}
+data <- read.csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv", na.strings = "", fileEncoding = "UTF-8-BOM")
+
+data
+```
+
+```{r}
+covid <- data %>% 
+  mutate(country = location,
+         total_tests = coalesce(total_tests, 0),
+         date = ymd(date),
+         country = factor(country, levels = c("United Kingdom", "Italy" , "Australia", "United States","Norway", "South Africa"))) %>% 
+  arrange(country) %>% 
+  group_by(country) %>% 
+  filter(total_tests == max(total_tests) , country == "South Africa" | country == "Norway" | country == "United States" | country == "Autralia" | country == "Italy" | country == "United Kingdom" ) %>%
+  select(date, country, population, total_tests)
+covid
+```
+```{r}
+tests <- covid %>% 
+  mutate(pop_per_mil = population / 1000000,
+         tests_per_pop_1mil = total_tests / pop_per_mil,
+         tests_per_pop_1mil_perc = tests_per_pop_1mil / 1000000 * 100) %>% 
+  select(country, tests_per_pop_1mil, tests_per_pop_1mil_perc) %>% 
+  mutate(tests_per_pop_1mil = format(round(tests_per_pop_1mil, 0), nsmall = 0),
+         tests_per_pop_1mil_perc = format(round(tests_per_pop_1mil_perc, 2), nsmall = 2)) %>% 
+  select(country, tests_per_pop_1mil, tests_per_pop_1mil_perc)
+tests
+```
+
+```{r}
+tests <- tests %>% 
+  mutate(tests_per_pop_1mil = as.integer(tests_per_pop_1mil),
+         tests_per_pop_1mil_1 = format(tests_per_pop_1mil, big.mark = ","))
+tests
+```
+
+
+```{r eval = FALSE}
+tests1 <- tests %>% 
+  mutate(pop = as.integer(tests_per_pop_1mil)) %>% # have a separate column for the test per pop per 1mil
+  unite("final", tests_per_pop_1mil_1, tests_per_pop_1mil_perc, sep = " (") %>% # add the first bracket to the column
+  mutate(unit = ")") %>% # add the closing bracket to the column
+  unite("final1", final, unit, sep = "%") # get the final column for the headings
+tests1
+```
+
+```{r}
+plot <- ggplot(data = tests1, 
+               mapping = aes(x = reorder(country, -pop),
+                             y = pop)) +
+  geom_bar(stat = "identity",
+           width = 0.9,
+           fill = "#b54c49",
+           color = "#b54c49") +
+  geom_text(aes(label = final1), 
+            colour = "white",
+            position = position_dodge(width = 0.9), 
+            vjust = -0.0,
+            hjust = -0.05) +
+  labs(x = NULL, 
+       y = NULL, 
+       title = "Tests per 1 million population",
+       caption = "Updated: 16 June 2020") +
+  theme_minimal() + 
+  theme(panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 11, color = "#969da1"),
+        plot.title = element_text(face = "bold", size = rel(1.5), hjust = -0.35, colour = "white"), 
+        plot.caption = element_text(face = "bold", size = 11, hjust = -0.25, color = "white"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+plot + coord_flip()
+```
+
+

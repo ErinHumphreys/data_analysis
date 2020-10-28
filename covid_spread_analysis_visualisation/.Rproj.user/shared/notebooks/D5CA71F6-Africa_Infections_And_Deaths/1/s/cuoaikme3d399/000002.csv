@@ -1,0 +1,6 @@
+"0","```r
+covid <- covid %>% 
+  mutate(Country = as.character(Country),
+         Country = str_replace_all(Country, \"_\", \" \"))
+covid
+```"

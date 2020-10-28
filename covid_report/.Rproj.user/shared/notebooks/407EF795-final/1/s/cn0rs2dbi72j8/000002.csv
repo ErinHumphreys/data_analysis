@@ -1,0 +1,11 @@
+"0","```r
+pol_dict <- c(\"president\",\"PRESIDENT\",\"politics\",\"political\",\"Ramaphosa\")
+
+pol_tweets <- topics_media %>% 
+  filter(str_detect(text,pol_dict))
+```"
+"1","longer object length is not a multiple of shorter object length
+"
+"0","```r
+pol_tweets
+```"

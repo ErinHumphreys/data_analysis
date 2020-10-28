@@ -1,0 +1,4 @@
+"0","# Importing Data"
+"0",""
+"0","rt <- read.csv(""https://raw.githubusercontent.com/dsfsi/covid19za/master/data/calc/calculated_rt_sa_provincial_cumulative.csv"", fileEncoding = ""UTF-8-BOM"", stringsAsFactors =  FALSE) "
+"0","rt"

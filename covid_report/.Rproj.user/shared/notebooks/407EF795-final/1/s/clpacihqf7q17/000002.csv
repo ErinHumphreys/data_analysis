@@ -1,0 +1,4 @@
+"0","```r
+# Load data 
+data(\"tidy_covid_DTM\")
+```"

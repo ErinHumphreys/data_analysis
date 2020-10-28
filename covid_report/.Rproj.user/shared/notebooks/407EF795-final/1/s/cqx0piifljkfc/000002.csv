@@ -1,0 +1,7 @@
+"0","```r
+# Top 20 most frequently posted words
+media_desc <- tidy_less %>%
+        count(word) %>%
+        arrange(desc(n)) 
+head(media_desc)
+```"

@@ -1,0 +1,10 @@
+"0","```r
+covid_contribution <-  tidy_covid %>%
+  inner_join(get_sentiments(\"bing\")) %>% 
+  count(word,sentiment)
+```"
+"1","Joining, by = \"word\"
+"
+"0","```r
+head(covid_contribution)
+```"

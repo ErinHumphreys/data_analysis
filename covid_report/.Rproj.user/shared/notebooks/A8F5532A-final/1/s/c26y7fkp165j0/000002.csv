@@ -1,0 +1,5 @@
+"0","# Separate date and time"
+"0","tidy_pols <- tidy_pols %>% "
+"0","  separate(created_at, into = c(""date"", ""time""), sep = ""\\s"", extra = ""merge"") %>% "
+"0","  mutate(date = as.Date(date,""%Y-%m-%d""))"
+"0","head(tidy_pols)"

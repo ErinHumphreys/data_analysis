@@ -1,0 +1,4 @@
+"0","```r
+# Save as RDS file. 
+write_rds(media_nrc_day, \"data/data_out/media_nrc_day.rds\")
+```"

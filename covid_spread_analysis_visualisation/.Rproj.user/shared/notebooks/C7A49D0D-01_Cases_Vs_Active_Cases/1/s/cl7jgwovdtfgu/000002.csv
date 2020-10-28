@@ -1,0 +1,5 @@
+"0","deaths <- deaths_data %>%"
+"0","  mutate(date = dmy(date),"
+"0","         total_deaths = total) %>% "
+"0","  select(date, total_deaths)"
+"0","deaths"

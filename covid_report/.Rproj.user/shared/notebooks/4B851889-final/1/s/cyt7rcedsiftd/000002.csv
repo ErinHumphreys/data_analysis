@@ -1,0 +1,7 @@
+"0","```r
+# Separate date and time
+tidy_less <- tidy_less %>% 
+  separate(created_at, into = c(\"date\", \"time\"), sep = \"\\s\", extra = \"merge\") %>% 
+  mutate(date = as.Date(date,\"%Y-%m-%d\"))
+head(tidy_less)
+```"

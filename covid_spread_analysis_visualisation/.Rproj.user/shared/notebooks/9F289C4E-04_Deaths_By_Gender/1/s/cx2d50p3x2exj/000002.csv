@@ -1,0 +1,4 @@
+"0","gender_deaths_plot <- gender_deaths_plot %>% "
+"0","  mutate(unk = total - (male + female)) %>% "
+"0","  select(male, female, unk)"
+"0","gender_deaths_plot"

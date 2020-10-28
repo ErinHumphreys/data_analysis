@@ -1,0 +1,116 @@
+---
+title: "Daily infection increases from first 100 (Africa)"
+output: html_notebook
+---
+
+```{r Setup, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(dplyr)
+library(utils)
+library(lubridate)
+library(ggplot2)
+```
+
+#Read raw data
+```{r}
+data <- read.csv("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv", na.strings = "", fileEncoding = "UTF-8-BOM")
+data
+```
+
+#Write raw data
+```{r}
+write.csv(data, "data/data_raw/raw_23_daily_infection_increases_from_first_100.csv")
+```
+
+
+#Clean data
+```{r}
+covid <- data %>% 
+  mutate(country = location,
+         infections = total_cases,
+         date = ymd(date)) %>% 
+  filter(total_cases >= 100, country == "South Africa" | country == "Egypt" | country == "Nigeria" | country == "Algeria" | country == "Morocco") %>% 
+  select(date, country, infections)
+covid
+```
+
+#Group data
+```{r}
+covid19 <- covid %>%
+  group_by(country) %>% 
+  mutate(day = row_number())
+covid19
+```
+
+#Write to data_out folder
+```{r}
+saveRDS(covid19, "data/data_out/23_daily_infection_increases_from_first_100.rds")
+write.csv(covid19, "data/data_out/23_daily_infection_increases_from_first_100.csv")
+```
+
+#Plot
+```{r eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+plot <- ggplot(data = covid19,
+               mapping = aes(x = day,
+                             y = infections,
+                             color = country,
+                             linetype = country,
+                             size = country)) +
+  geom_line(aes(group = country)) +
+  # scale_x_log10() +
+  scale_x_continuous(breaks = seq(0, 80, by = 10)) +
+  scale_y_continuous(breaks = c(0, 100, 200, 300, 400, 500, 1000, 2000, 3000, 4000, 5000, 10000, 20000, 30000, 40000, 50000, 100000, 200000)) +
+  scale_linetype_manual(values = c("Algeria" = "dashed", 
+                                   "South Africa" = "solid", 
+                                   "Egypt" = "dashed", 
+                                   "Morocco" = "dashed", 
+                                   "Nigeria" = "dashed")) +
+  scale_colour_manual(values = c("Algeria" = "#969da1",
+                                 "South Africa" = "#b54c49", 
+                                 "Egypt" = "#969da1", 
+                                 "Morocco" = "#969da1", 
+                                 "Nigeria" = "#969da1")) +
+  scale_size_manual(values = c("Algeria" = 0.5, 
+                               "South Africa" = 1.25, 
+                               "Egypt" = 0.5, 
+                               "Morocco" = 0.5, 
+                               "Nigeria" = 0.5)) +
+  labs(x = NULL,
+       y = NULL,
+       title="Daily infection increases from first 100 (Africa)",
+       caption = "Updated: 13 June 2020") + # title label 
+  theme_minimal() + # add theme
+  theme(legend.title = element_blank(),
+        legend.position = c(0.9, 0.2), 
+        legend.text = element_text(color = "white"),
+        panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_text(size = 11, color = "#969da1"),
+        axis.text.y = element_text(size = 11, color = "#969da1"),
+        plot.title = element_text(face = "bold", size = rel(1.5), hjust = 0.0, colour = "white"), 
+        plot.caption = element_text(size = 11, hjust = 0, color = "white"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+plot
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

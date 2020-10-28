@@ -1,0 +1,7 @@
+"0","# Most common Positive and Negative words (Limited to 20)"
+"0","covid_contribution <-  tidy_covid %>%"
+"0","  inner_join(get_sentiments(""bing"")) %>% "
+"0","  count(word,sentiment)"
+"2","Joining, by = ""word""
+"
+"0","head(covid_contribution)"

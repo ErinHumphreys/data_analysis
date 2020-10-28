@@ -1,0 +1,2 @@
+"0","# Open data of media timelines"
+"0","news_media <- read.csv(""data/data_raw/media_timelines.csv"", stringsAsFactors = FALSE)"

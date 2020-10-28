@@ -1,0 +1,6 @@
+"0","daily_pos <- media %>% "
+"0","  mutate(weeks = week_label,"
+"0","         weekly_case_av = round(weekly_cases/7)) %>% "
+"0","  select(weeks,weekly_case_av) %>% "
+"0","  filter(!is.na(weekly_case_av))"
+"0","daily_pos"

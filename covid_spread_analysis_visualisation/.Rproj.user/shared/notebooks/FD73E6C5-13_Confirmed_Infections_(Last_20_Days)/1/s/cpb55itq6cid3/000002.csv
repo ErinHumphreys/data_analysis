@@ -1,0 +1,35 @@
+"0","```r
+plot <- ggplot(data = covid19,
+               mapping = aes(x = date,
+                             y = infec_per_day)) +
+  geom_bar(stat = \"identity\",
+           width = 0.9,
+           fill = \"#b54c49\",
+           color = \"#b54c49\") +
+  geom_text(aes(label = infec_per_day),
+            size = 3,
+            colour = \"white\", 
+            position = position_dodge(width = 1.0), 
+            hjust = - 0.20, 
+            vjust = + 0.40) +
+  scale_x_date(date_breaks = \"1 day\") +
+  labs(x = NULL, 
+       y = NULL, 
+       title = \"Confirmed infections (last 20 days)\",
+       caption = \"Updated: 16 June\") +
+  theme_minimal() + 
+  theme(legend.position = \"none\",
+        panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 8, color = \"white\"),
+        plot.title = element_text(face = \"bold\", size = rel(1.5), hjust = -0.25, colour = \"white\"), 
+        plot.caption = element_text(size = 9, hjust = -0.13, face = \"bold\", color = \"white\"),
+        plot.background = element_rect(size = 1.5, fill = \"#142c44\", colour = \"#969da1\"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, \"cm\"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+plot + coord_flip()
+```"

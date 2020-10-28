@@ -1,0 +1,5 @@
+"0","```r
+
+new_age <- new_age[-c(12),] #delete row 12
+new_age
+```"

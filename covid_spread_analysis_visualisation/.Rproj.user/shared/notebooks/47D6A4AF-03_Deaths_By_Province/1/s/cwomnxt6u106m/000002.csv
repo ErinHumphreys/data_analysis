@@ -1,0 +1,2 @@
+"0","saveRDS(covid, ""data/data_out/03_total_deaths_by_province.rds"")"
+"0","write.csv(covid, ""data/data_out/03_total_deaths_by_province.csv"")"

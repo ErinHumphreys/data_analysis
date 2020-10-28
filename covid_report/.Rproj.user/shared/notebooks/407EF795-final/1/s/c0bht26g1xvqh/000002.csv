@@ -1,0 +1,7 @@
+"0","```r
+media_nrc_day <-
+  tidy_less %>%
+  inner_join(get_sentiments(\"nrc\")) %>% 
+  count(date,sentiment) #%>%
+media_nrc_day
+```"

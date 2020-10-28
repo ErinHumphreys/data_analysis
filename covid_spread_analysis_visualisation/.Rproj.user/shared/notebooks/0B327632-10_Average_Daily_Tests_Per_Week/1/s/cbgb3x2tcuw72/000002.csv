@@ -1,0 +1,2 @@
+"0","saveRDS(active_cases_data, ""data/data_out/10_average_daily_tests_per_week.rds"")"
+"0","write.csv(active_cases_data, ""data/data_out/10_average_daily_tests_per_week.csv"")"

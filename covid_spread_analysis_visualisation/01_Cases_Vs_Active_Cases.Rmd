@@ -1,0 +1,165 @@
+---
+title: "Cases vs Active Cases"
+output: html_notebook
+---
+
+```{r Setup, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(utils)
+library(lubridate)
+library(ggplot2)
+library(xts)
+library(timeDate)
+library(formattable)
+```
+
+#Confirmed Cases Data
+```{r}
+confirmed_cases_data <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_confirmed.csv", na.strings = "", fileEncoding = "UTF-8-BOM", stringsAsFactors = TRUE)
+confirmed_cases_data
+```
+
+#Write raw data
+```{r}
+write.csv(confirmed_cases_data, "data/data_raw/raw_01_cases_vs_active_cases.csv")
+```
+
+```{r}
+confirmed_cases <- confirmed_cases_data %>%
+  mutate(date = dmy(date),
+         total_cases = total) %>% 
+  select(date, total_cases)
+confirmed_cases
+```
+
+
+#Recoveries Data
+```{r}
+recoveries_data <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_recoveries.csv", na.strings = "", fileEncoding = "UTF-8-BOM", stringsAsFactors = TRUE)
+recoveries_data
+```
+
+```{r}
+recoveries <- recoveries_data %>%
+  mutate(date = dmy(date),
+         total_recoveries = total) %>% 
+  select(date, total_recoveries)
+recoveries
+```
+
+#Deaths Data
+```{r}
+deaths_data <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_deaths.csv", na.strings = "", fileEncoding = "UTF-8-BOM", stringsAsFactors = TRUE)
+deaths_data
+```
+
+```{r}
+deaths <- deaths_data %>%
+  mutate(date = dmy(date),
+         total_deaths = total) %>% 
+  select(date, total_deaths)
+deaths
+```
+
+```{r}
+active_cases <- confirmed_cases %>% 
+  left_join(recoveries, by = c("date" = "date"))
+active_cases
+```
+
+#Create Active Cases data
+```{r}
+active_cases <- active_cases %>% 
+  left_join(deaths, by = c("date" = "date"))
+active_cases
+```
+
+```{r}
+active_cases <- active_cases %>% 
+  filter(total_cases >= 1,
+         total_recoveries >= 1,
+         total_deaths >= 1)
+active_cases
+```
+
+```{r}
+active_cases_data <- active_cases %>% 
+  mutate(active_cases = total_cases - (total_recoveries + total_deaths),
+         active_cases = as.integer(active_cases)) %>% 
+  select(date, active_cases)
+active_cases_data
+```
+
+```{r}
+active_and_confirmed_cases <- confirmed_cases %>% 
+  left_join(active_cases_data, by = c("date" = "date"))
+active_and_confirmed_cases
+```
+
+```{r}
+active_and_confirmed_cases[is.na(active_and_confirmed_cases)] = 0 # replace NA with 0
+active_and_confirmed_cases
+```
+
+#Write to data_out folder
+```{r}
+saveRDS(active_and_confirmed_cases, "data/data_out/01_cases_vs_active_cases.rds")
+write.csv(active_and_confirmed_cases, "data/data_out/01_cases_vs_active_cases.csv")
+```
+
+#Plot
+```{r message = FALSE, warning = FALSE}
+plot <- ggplot() + 
+  geom_line(data = active_and_confirmed_cases, 
+            aes(x = date, 
+                y = total_cases), 
+            color = "#b54c49") +
+  geom_line(data = active_and_confirmed_cases, 
+            aes(x = date, 
+                y = active_cases), 
+            color = "#3080c2") +
+  labs(x = NULL,
+       y = NULL,
+       title = "Cases vs Active Cases",
+       caption = "Updated: 16 June 2020") +
+  scale_x_date(name = NULL, date_labels = "%d/%m", date_breaks = "month")+
+  scale_y_continuous(limits = c(0,70000), breaks = seq(0,70000, 10000)) +
+  theme_minimal() + # add theme
+  theme(panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_text(size = 11, color = "#969da1"),
+        axis.text.y = element_text(size = 11, color = "#969da1"),
+        plot.title = element_text(face = "bold", size = rel(1.5), hjust = 0.0, colour = "white"), 
+        plot.caption = element_text(size = 11, hjust = 0, color = "white"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+plot
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

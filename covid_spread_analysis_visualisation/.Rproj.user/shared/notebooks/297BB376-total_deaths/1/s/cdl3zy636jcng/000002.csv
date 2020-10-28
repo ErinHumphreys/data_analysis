@@ -1,0 +1,9 @@
+"0","plot2 <- ggplot() +"
+"0","  data = covid3 +"
+"0","  aes(date, case_fatality_rate) +"
+"0","  ylim(0.10) +"
+"0","  geom_point(colour = ""grey"") +"
+"0","  theme_minimal()"
+"2","Error in Ops.data.frame(covid3, aes(date, case_fatality_rate)) : 
+  list of length 2 not meaningful
+"

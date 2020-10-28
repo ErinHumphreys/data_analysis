@@ -1,0 +1,26 @@
+{
+    "id": "A749B6D2",
+    "path": "~/r_projects/r_assignment/final/08_Confirmed_And_Active_Cases_By_Province.Rmd",
+    "project_path": "08_Confirmed_And_Active_Cases_By_Province.Rmd",
+    "type": "r_markdown",
+    "hash": "3357095034",
+    "contents": "",
+    "dirty": false,
+    "created": 1592330912514.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "chunk_output_type": "inline",
+        "cursorPosition": "111,0",
+        "scrollLine": "110",
+        "last_setup_crc32": "F7DEE3C627eeafcb"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1592331553,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592331553861,
+    "read_only": false,
+    "read_only_alternatives": []
+}

@@ -1,0 +1,14 @@
+"0","```r
+covid <- covid %>% 
+  mutate(province = as.character(province),
+         province = str_replace(province, \"WC\", \"Western Cape\"),
+         province = str_replace(province, \"EC\", \"Eastern Cape\"),
+         province = str_replace(province, \"GP\", \"Gauteng\"),
+         province = str_replace(province, \"KZN\", \"KwaZulu Natal\"),
+         province = str_replace(province, \"NW\", \"North West\"),
+         province = str_replace(province, \"FS\", \"Free State\"),
+         province = str_replace(province, \"NC\", \"Northern Cape\"),
+         province = str_replace(province, \"MP\", \"Mpumalanga\"),
+         province = str_replace(province, \"LP\", \"Limpopo\"))
+covid
+```"

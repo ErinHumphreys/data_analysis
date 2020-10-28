@@ -1,0 +1,2 @@
+"0","# save data in RDS file. "
+"0","write_rds(tidy_covid_DTM, ""data/data_out/tidy_covid_DTM.rds"")"

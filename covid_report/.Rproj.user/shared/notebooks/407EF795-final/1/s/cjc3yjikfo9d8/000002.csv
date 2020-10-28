@@ -1,0 +1,12 @@
+"0","```r
+overall_covid_agency <-
+  tidy_covid %>%
+  inner_join(get_sentiments(\"bing\")) %>% 
+  count(screen_name,date, sentiment) %>% # Count screen names assigns the number of positive and negative words per day by agency
+  spread(sentiment,n, fill = 0) 
+```"
+"1","Joining, by = \"word\"
+"
+"0","```r
+head(overall_covid_agency)
+```"

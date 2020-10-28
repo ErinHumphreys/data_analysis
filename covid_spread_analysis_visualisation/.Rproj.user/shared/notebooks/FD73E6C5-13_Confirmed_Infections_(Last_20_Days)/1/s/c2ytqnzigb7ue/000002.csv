@@ -1,0 +1,6 @@
+"0","```r
+covid19 <- covid %>% 
+  mutate(date = (format(date, \"%d-%m-%Y\")),
+         date = as.Date(date, \"%d-%m-%Y\"))
+covid19
+```"

@@ -1,0 +1,6 @@
+"0","av_daily <- media %>% "
+"0","  mutate(weeks = week_label,"
+"0","         week_av = round(weekly_tests/7)) %>% "
+"0","  select(weeks, weekly_tests, week_av) %>% "
+"0","  filter(!is.na(weekly_tests))"
+"0","av_daily"

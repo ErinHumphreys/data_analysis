@@ -1,0 +1,7 @@
+"0","```r
+# Top 20 most frequently posted words
+covid_desc <- tidy_covid %>%
+        count(word) %>%
+        arrange(desc(n)) 
+head(covid_desc)
+```"

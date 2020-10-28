@@ -1,0 +1,2 @@
+"0","pro_pop <- read.csv(""https://raw.githubusercontent.com/dsfsi/covid19za/master/data/district_data/za_province_pop.csv"", fileEncoding = ""UTF-8-BOM"", fill = TRUE,header = TRUE)"
+"0","pro_pop"

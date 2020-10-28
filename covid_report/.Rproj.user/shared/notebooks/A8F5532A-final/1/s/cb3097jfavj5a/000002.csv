@@ -1,0 +1,6 @@
+"0","overall_sentiment <-"
+"0","  tidy_less %>%"
+"0","  inner_join(get_sentiments(""bing"")) %>% "
+"0","  count(date, sentiment) %>% "
+"0","  spread(sentiment,n, fill = 0) "
+"0","head(overall_sentiment)"

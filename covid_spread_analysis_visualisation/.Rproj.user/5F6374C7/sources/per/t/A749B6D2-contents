@@ -1,0 +1,186 @@
+---
+title: "Confirmed Cases and Active Cases by Province"
+output: html_notebook
+---
+
+```{r Setup, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(dplyr)
+library(utils)
+library(lubridate)
+library(ggplot2)
+library(xts)
+library(timeDate)
+```
+
+#Confirmed Cases Data
+```{r}
+confirmed_cases_data <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_confirmed.csv", na.strings = "", fileEncoding = "UTF-8-BOM", stringsAsFactors = TRUE)
+confirmed_cases_data
+```
+
+#Write raw data
+```{r}
+write.csv(confirmed_cases_data, "data/data_raw/raw_08_confirmed_and_active_cases_by_province/raw_cases.csv")
+```
+
+#Pivot longer
+```{r}
+confirmed_cases_data <- confirmed_cases_data %>% 
+  pivot_longer(c('EC', 'FS','GP', 'KZN', 'LP', 'MP', 'NC', 'NW', 'WC'), names_to = "province", values_to = "confirmed_cases")
+confirmed_cases_data
+```
+
+#Rename columns and convert date to date format
+```{r}
+confirmed_cases_data <- confirmed_cases_data %>%
+  mutate(date = dmy(date),
+         total_cases = total) %>% 
+  select(date, province, confirmed_cases)
+confirmed_cases_data
+```
+
+#Recoveries Data
+```{r}
+recoveries_data <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_recoveries.csv", na.strings = "", fileEncoding = "UTF-8-BOM", stringsAsFactors = TRUE)
+recoveries_data
+```
+
+#Write raw data
+```{r}
+write.csv(recoveries_data, "data/data_raw/raw_08_confirmed_and_active_cases_by_province/raw_recoveries.csv")
+```
+
+#Pivot longer
+```{r}
+recoveries_data <- recoveries_data %>% 
+  pivot_longer(c('EC', 'FS','GP', 'KZN', 'LP', 'MP', 'NC', 'NW', 'WC',), names_to = "province", values_to = "recoveries")
+recoveries_data
+```
+
+#Rename columns and convert date to date format
+```{r}
+recoveries_data <- recoveries_data %>%
+  mutate(date = dmy(date),
+         total_recoveries = total) %>% 
+  select(date, province, recoveries) 
+recoveries_data
+```
+
+#Deaths Data
+```{r}
+deaths_data <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_deaths.csv", na.strings = "", fileEncoding = "UTF-8-BOM", stringsAsFactors = TRUE)
+deaths_data
+```
+
+#Write raw data
+```{r}
+write.csv(deaths_data, "data/data_raw/raw_08_confirmed_and_active_cases_by_province/raw_deaths.csv")
+```
+
+#Pivot longer
+```{r}
+deaths_data <- deaths_data %>% 
+  pivot_longer(c('EC', 'FS','GP', 'KZN', 'LP', 'MP', 'NC', 'NW', 'WC',), names_to = "province", values_to = "deaths")
+deaths_data
+```
+
+#Rename columns and convert date to date format
+```{r}
+deaths_data <- deaths_data %>%
+  mutate(date = dmy(date),
+         total_deaths = total) %>% 
+  select(date, province, deaths)
+deaths_data
+```
+
+#Join recoveries data to confirmed cases data
+```{r}
+active_cases_data <- recoveries_data %>% 
+  left_join(confirmed_cases_data)
+active_cases_data
+```
+#Join previous table to deaths data 
+```{r}
+active_cases_data <- active_cases_data %>% 
+  left_join(deaths_data) %>% 
+  mutate(active_cases = confirmed_cases - (recoveries + deaths)) %>% 
+  select(date,province, confirmed_cases, active_cases)
+active_cases_data
+```
+
+#Rename data
+```{r}
+active_cases_data <- active_cases_data %>% 
+  mutate(province = str_replace(province, "WC", "WESTERN CAPE"),
+         province = str_replace(province, "EC", "EASTERN CAPE"),
+         province = str_replace(province, "GP", "GAUTENG"),
+         province = str_replace(province, "KZN", "KWAZULU NATAL"),
+         province = str_replace(province, "NW", "NORTH WEST"),
+         province = str_replace(province, "FS", "FREE STATE"),
+         province = str_replace(province, "NC", "NORTHERN CAPE"),
+         province = str_replace(province, "MP", "MPUMALANGA"),
+         province = str_replace(province, "LP", "LIMPOPO"))
+active_cases_data
+```
+
+
+<!-- Incomplete -->
+
+```{r}
+plot <- ggplot() + 
+  geom_line(data = active_cases_data,
+            aes(x = date,
+                y = confirmed_cases),
+            color = "#b54c49") +
+  geom_line(data = active_cases_data,
+            aes(x= date,
+                y = active_cases),
+            color = "#3484c4") +
+#  geom_line(aes(y = active_cases))# +
+#  geom_text(aes(label = confirmed_cases), 
+#            position=position_dodge(width=0.9), 
+#            vjust=-0.25,
+#           color = "white") #+
+  labs(x = NULL,
+       y = NULL,
+       title = "Confirmed Cases vs Active Cases by Province",
+       caption = "Updated: 16 June 2020") +
+  scale_y_continuous(limits = c(0,40000), breaks = seq(0,38000, 19000)) +
+  theme_minimal() + 
+  theme(axis.text.y = element_text(color = "white", size = 7),
+        axis.text.x = element_text(color = "white"),
+        axis.text.x.bottom = element_blank(),
+        plot.background = element_rect(fill = "#1c344c", color = "#142c44", size = 5),
+        plot.title = element_text(face = "bold", 
+                                  size =rel(1.5), 
+                                  color = "white"),
+        plot.caption = element_text(size = 9, hjust = 0, face = "bold", color = "white"),
+        panel.grid = element_blank(),
+        panel.grid.major.y = element_line(linetype = "dotted",
+                                          color = "lightblue"),
+        panel.background = element_rect(fill="#1c344c", 
+                                        color = "#1c344c"),
+        strip.background = element_rect(fill="#1c344c", 
+                                        color = "#1c344c"),
+        strip.text = element_text(colour = "white",
+                                  face = "bold"))+
+  facet_wrap(~province, scales = "free_y")
+plot
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

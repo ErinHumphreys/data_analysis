@@ -1,0 +1,1 @@
+"0","write_csv(gender_deaths_table, ""data/data_raw/raw_04_deaths_by_gender.csv"")"

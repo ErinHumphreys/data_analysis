@@ -1,0 +1,3 @@
+"0","data2 <- data2 %>% "
+"0","  select(Age, Total)"
+"0","data2"

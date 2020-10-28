@@ -1,0 +1,4 @@
+"0","```r
+# This tells R to remove all numeric digits and the â€˜-â€™ sign means grep excludes them rather than includes them.
+tidy_covid_tweets <- tidy_covid_tweets[-grep(\"\\b\\d+\\b\", tidy_covid_tweets$word),]
+```"

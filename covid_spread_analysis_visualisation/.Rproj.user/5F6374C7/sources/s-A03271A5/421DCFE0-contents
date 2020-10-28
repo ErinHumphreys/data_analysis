@@ -1,0 +1,84 @@
+---
+title: "Confirmed infections (last 20 days)"
+output: html_notebook
+---
+
+```{r Setup, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(dplyr)
+library(utils)
+library(lubridate)
+library(ggplot2)
+```
+
+#Read raw data
+```{r}
+data <- read.csv("https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_confirmed.csv", na.strings = "", fileEncoding = "UTF-8-BOM", stringsAsFactors = TRUE)
+data
+```
+
+#Write raw data
+```{r}
+write.csv(data, "data/data_raw/raw_14_confirmed_infections_(last_20_days).csv")
+```
+
+#Clean data and filter to the last 20 days
+```{r}
+covid <- data %>% 
+  mutate(date = dmy(date),
+         infec_per_day = total - lag(total)) %>% 
+  select(date, infec_per_day) %>% 
+  filter(date >= today() - days(21))
+covid
+```
+
+#Convert date to date format
+```{r}
+covid19 <- covid %>% 
+  mutate(date = (format(date, "%d-%m-%Y")),
+         date = as.Date(date, "%d-%m-%Y"))
+covid19
+```
+
+#Write to data_out folder
+```{r}
+saveRDS(covid19, "data/data_out/14_confirmed_infections_(last_20_days).rds")
+write.csv(covid19, "data/data_out/14_confirmed_infections_(last_20_days).csv")
+```
+
+#Plot
+```{r}
+plot <- ggplot(data = covid19,
+               mapping = aes(x = date,
+                             y = infec_per_day)) +
+  geom_bar(stat = "identity",
+           width = 0.9,
+           fill = "#b54c49",
+           color = "#b54c49") +
+  geom_text(aes(label = infec_per_day),
+            size = 3,
+            colour = "white", 
+            position = position_dodge(width = 1.0), 
+            hjust = - 0.20, 
+            vjust = + 0.40) +
+  scale_x_date(date_breaks = "1 day") +
+  labs(x = NULL, 
+       y = NULL, 
+       title = "Confirmed infections (last 20 days)",
+       caption = "Updated: 16 June") +
+  theme_minimal() + 
+  theme(legend.position = "none",
+        panel.grid.minor.x = element_blank(), 
+        axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 8, color = "white"),
+        plot.title = element_text(face = "bold", size = rel(1.5), hjust = -0.25, colour = "white"), 
+        plot.caption = element_text(size = 9, hjust = -0.13, face = "bold", color = "white"),
+        plot.background = element_rect(size = 1.5, fill = "#142c44", colour = "#969da1"),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        panel.border = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.line = element_blank())
+plot + coord_flip()
+```

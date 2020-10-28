@@ -1,0 +1,7 @@
+"0","```r
+new2 <- new2 %>% 
+  mutate(label = if_else(date == max(date)))
+```"
+"1","Error in if_else(date == max(date)) : 
+  argument \"true\" is missing, with no default
+"

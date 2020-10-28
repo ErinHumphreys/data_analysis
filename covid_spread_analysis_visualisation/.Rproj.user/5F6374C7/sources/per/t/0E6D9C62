@@ -1,0 +1,26 @@
+{
+    "id": "0E6D9C62",
+    "path": "~/r_projects/r_assignment/final/06_Deaths_By_Province_Per_100k.Rmd",
+    "project_path": "06_Deaths_By_Province_Per_100k.Rmd",
+    "type": "r_markdown",
+    "hash": "3338648632",
+    "contents": "",
+    "dirty": false,
+    "created": 1592329431134.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "chunk_output_type": "inline",
+        "cursorPosition": "21,0",
+        "scrollLine": "20",
+        "last_setup_crc32": "F7DEE3C6f8f004c2"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1592330849,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592330849942,
+    "read_only": false,
+    "read_only_alternatives": []
+}

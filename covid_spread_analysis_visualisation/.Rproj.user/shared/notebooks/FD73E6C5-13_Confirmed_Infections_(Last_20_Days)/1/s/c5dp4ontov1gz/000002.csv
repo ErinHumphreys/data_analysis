@@ -1,0 +1,8 @@
+"0","```r
+covid <- data %>% 
+  mutate(date = dmy(date),
+         infec_per_day = total - lag(total)) %>% 
+  select(date, infec_per_day) %>% 
+  filter(date >= today() - days(21))
+covid
+```"

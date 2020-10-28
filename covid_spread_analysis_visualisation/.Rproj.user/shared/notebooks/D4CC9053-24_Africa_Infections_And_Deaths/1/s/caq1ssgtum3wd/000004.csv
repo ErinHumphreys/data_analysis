@@ -1,0 +1,4 @@
+"0","covid <- covid %>% "
+"0","  mutate(Country = as.character(Country),"
+"0","         Country = str_replace_all(Country, ""_"", "" ""))"
+"0","covid"

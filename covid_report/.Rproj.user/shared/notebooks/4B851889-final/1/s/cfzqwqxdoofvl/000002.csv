@@ -1,0 +1,6 @@
+"0","```r
+# And now we can repeat the count of top words above:
+tidy_covid_tweets %>%
+  count(word) %>%
+    arrange(desc(n))
+```"

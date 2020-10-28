@@ -1,0 +1,95 @@
+---
+title: "Africa - Infections and deaths"
+output: html_notebook
+---
+
+```{r Setup, message = FALSE, warning = FALSE}
+library(formattable)
+library(tidyverse)
+library(dplyr)
+library(utils)
+library(lubridate)
+library(gridExtra)
+library(grid)
+library(stringr)
+```
+
+#Read raw data
+```{r}
+data <- read.csv("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv", na.strings = "", fileEncoding = "UTF-8-BOM")
+```
+
+#Write raw data
+```{r}
+write.csv(data, "data/data_raw/raw_24_africa_infections_and_deaths.csv")
+```
+
+#Clean data
+```{r}
+covid <- data %>% 
+  select(day, month, year, continentExp, countriesAndTerritories, cases, deaths) %>% 
+  mutate(continent = continentExp,
+        date = make_datetime(year, month, day),
+        country = countriesAndTerritories) %>% 
+  select(country, cases, deaths) %>% 
+  group_by(country) %>% 
+  summarize(Cases = sum(cases),
+            Deaths = sum(deaths)) %>% 
+  filter(country == "South_Africa" | country == "Egypt" | country == "Nigeria" | country == "Algeria" | country == "Ghana" | country == "Morocco" | country == "Cameroon" | country == "Sudan" | country == "Senegal" | country == "Djibouti" | country == "Guinea" | country == "Democratic_Republic_of_the_Congo" | country == "Cote_dIvoire" | country == "Gabon" | country == "Kenya") %>% 
+  mutate(Country = factor(country, levels = c("South_Africa","Egypt", "Nigeria", "Algeria", "Ghana", "Morocco", "Cameroon", "Sudan", "Senegal", "Djibouti", "Guinea", "Democratic_Republic_of_the_Congo", "Cote_dIvoire", "Gabon", "Kenya"))) %>% 
+  arrange(Country) %>% 
+  select(Country, Cases, Deaths)
+covid
+```
+
+#Edit values of data
+```{r}
+covid <- covid %>% 
+  mutate(Country = as.character(Country),
+         Country = str_replace_all(Country, "_", " "))
+covid
+```
+
+#Write to data_out folder
+```{r}
+saveRDS(covid, "data/data_out/24_africa_infections_and_deaths.rds")
+write.csv(covid, "data/data_out/24_africa_infections_and_deaths.csv")
+```
+
+#Visualise dataframe into table
+```{r}
+  grid.newpage()
+  grid.table(covid)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

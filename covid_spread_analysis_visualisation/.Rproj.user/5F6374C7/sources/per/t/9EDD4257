@@ -1,0 +1,26 @@
+{
+    "id": "9EDD4257",
+    "path": "~/r_projects/r_assignment/final/14_Positivity_Rate_Number_Of_Tests_Vs_Positive_Cases_Perc.Rmd",
+    "project_path": "14_Positivity_Rate_Number_Of_Tests_Vs_Positive_Cases_Perc.Rmd",
+    "type": "r_markdown",
+    "hash": "3188797523",
+    "contents": "",
+    "dirty": false,
+    "created": 1592322846947.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "tempName": "Untitled1",
+        "chunk_output_type": "inline",
+        "cursorPosition": "122,69",
+        "scrollLine": "96"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1592316456,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592316456,
+    "read_only": false,
+    "read_only_alternatives": []
+}

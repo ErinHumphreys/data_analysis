@@ -1,0 +1,7 @@
+"0","```r
+# Tokenising approx. 15 000 tweets from media agencies
+tidy_media_timelines <- media_timelines %>%
+  select(created_at, screen_name,text,favorite_count,retweet_count) %>%
+  unnest_tokens(\"word\", text)
+head(tidy_media_timelines)
+```"

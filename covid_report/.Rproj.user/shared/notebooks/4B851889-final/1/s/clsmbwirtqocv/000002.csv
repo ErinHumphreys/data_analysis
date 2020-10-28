@@ -1,0 +1,10 @@
+"0","```r
+findThoughts(Second_STM, 
+             texts = covid_tweets$documents,
+             n = 2, 
+             topics = 3)
+```"
+"1","
+ Topic 3: 
+ 	 
+"

@@ -1,0 +1,16 @@
+"0","```r
+covid <- data %>% 
+  mutate(country = location,
+         total_tests = coalesce(total_tests, 0),
+         date = ymd(date),
+         country = factor(country, levels = c(\"United Kingdom\", \"Italy\" , \"Australia\", \"United States\",\"Norway\", \"South Africa\"))) %>% 
+  arrange(country) %>% 
+  group_by(country) %>% 
+  filter(total_tests == max(total_tests) , country == \"South Africa\" | country == \"Norway\" | country == \"United States\" | country == \"Autralia\" | country == \"Italy\" | country == \"United Kingdom\" ) %>%
+  select(date, country, population, total_tests)
+```"
+"1","Factor `country` contains implicit NA, consider using `forcats::fct_explicit_na`
+"
+"0","```r
+covid
+```"

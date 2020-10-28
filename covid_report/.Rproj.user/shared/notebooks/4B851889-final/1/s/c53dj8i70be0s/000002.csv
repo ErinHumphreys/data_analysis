@@ -1,0 +1,5 @@
+"0","# Top 20 most frequently posted words"
+"0","media_desc <- tidy_less %>%"
+"0","        count(word) %>%"
+"0","        arrange(desc(n)) "
+"0","head(media_desc)"

@@ -1,0 +1,7 @@
+"0","covid_geo_tweets <- search_tweets(""COVID-19"","
+"0","                                  ""lang:en"", "
+"0","                                  geocode = ""-30.55948,22.9375,1000mi"", "
+"0","                                  n = 3000, "
+"0","                                  type =""recent"", "
+"0","                                  include_rts = FALSE)"
+"0","geocoded <- lat_lng(covid_geo_tweets)"

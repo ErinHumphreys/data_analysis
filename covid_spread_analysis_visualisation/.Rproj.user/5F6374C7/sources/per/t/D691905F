@@ -1,0 +1,25 @@
+{
+    "id": "D691905F",
+    "path": "~/r_projects/r_assignment/final/04_Deaths_By_Gender.Rmd",
+    "project_path": "04_Deaths_By_Gender.Rmd",
+    "type": "r_markdown",
+    "hash": "661541922",
+    "contents": "",
+    "dirty": false,
+    "created": 1592321731107.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "chunk_output_type": "inline",
+        "cursorPosition": "2,21",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1592321743,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1592321743,
+    "read_only": false,
+    "read_only_alternatives": []
+}
